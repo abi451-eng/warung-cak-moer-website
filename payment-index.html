@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selesaikan Pembayaran</title>
+    <link rel="stylesheet" href="payment-style.css">
+</head>
+<body>
+    <main class="payment-section">
+        <div class="container">
+            <div class="order-summary-header">
+                <h2>Terima Kasih, Pesanan Anda Telah Diterima!</h2>
+                <p>Silahkan selesaikan pembayaran untuk mengonfirmasi pesanan Anda.</p>
+                <p>Total Pembayaran Anda: <span class="price-display">Rp 0</span></p>
+                <p>Mohon Untuk Menkonfirmasi Pesanan Anda Via WhatssApp:</p>
+            </div>
+
+            <div class="order-summary-details">
+                <h3>Rincian Pesanan Anda:</h3>
+                <ul id="order-details-list">
+                    </ul>
+                <div class="total-summary">
+                    Total Pembayaran: <span id="total-amount-summary" class="price-display">Rp 0</span>
+                </div>
+            </div>
+
+            <!-- <div class="payment-options-section">
+                <div class="payment-card payment-card-qris">
+                    <input type="radio" id="qris-dana-radio" name="payment-method" value="qris-dana">
+                    <label for="qris-dana-radio">
+                        <img src="/image/Qris_Warung_CakMoer.png" alt="QRIS Dana">
+                        <span>QRIS</span>
+                    </label>
+                </div>
+                </div> -->
+<!-- 
+            <div id="qris-image-container" style="text-align: center; margin-top: 20px; display: none;">
+                <h3 id="selected-qris-label" class="qris-display" style="text-align: center; margin-top: 20px;">
+                    </h3>
+                <img id="qris-image" src="" alt="QRIS Code" style="max-width: 300px; height: auto;">
+                <p class="qris-instruction"><small>Pastikan jumlah yang ditransfer sesuai dengan total pembayaran Anda.</small></p>
+                <p class="qris-instruction"><small>Setelah pembayaran, mohon konfirmasi melalui WhatsApp.</small></p>
+            </div> -->
+
+            <div class="confirm-button-section">
+                <a href="#" id="whatsapp-confirm-btn" class="button confirm-button">Konfirmasi Pembayaran via WhatsApp</a>
+            </div>
+            
+
+            <div class="back-home-section">
+                <a href="pemesanan.html" class="button back-button">Kembali ke Halaman Pemesanan</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="payment-script.js"></script>
+</body>
+</html>

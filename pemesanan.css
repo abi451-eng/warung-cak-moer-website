@@ -1,0 +1,305 @@
+/* Variabel CSS */
+:root {
+    --primary-color: #4CAF50; /* Hijau dasar */
+    --secondary-color: #333; /* Warna teks utama */
+    --accent-color: #FFC107; /* Kuning/Orange untuk highlight */
+    --background-color: #f0f0f0; /* Latar belakang abu-abu muda */
+    --card-background: #ffffff; /* Latar belakang kartu putih */
+    --border-color: #cccccc; /* Warna border umum */
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --button-bg: #4CAF50; /* Warna tombol */
+    --button-hover-bg: #45a049;
+    --error-color: #e74c3c;
+}
+
+/* Reset CSS dasar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif; /* Font sederhana */
+    line-height: 1.6;
+    color: var(--secondary-color);
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Pusat vertikal */
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    background-color: var(--card-background);
+    padding: 30px;
+    border-radius: 8px; /* Sedikit lengkung */
+    box-shadow: 0 2px 10px var(--shadow-color);
+    width: 100%;
+    max-width: 600px; /* Lebar maksimal form */
+    margin: auto; /* Tengah otomatis */
+}
+
+h1, h2 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2em; /* Ukuran font H1 */
+}
+
+h2 {
+    font-size: 1.5em; /* Ukuran font H2 */
+    margin-top: 20px;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px; /* Sedikit lengkung */
+    font-size: 1em;
+    font-family: Arial, sans-serif;
+}
+
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+
+/* --- Gaya untuk Menu Item Card (Checkbox) --- */
+.menu-items-container {
+    display: grid;
+    grid-template-columns: 1fr; /* Satu kolom untuk kesederhanaan awal, bisa responsif nanti */
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.menu-item-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 12px 15px;
+    display: flex;
+    align-items: center; /* Sejajar vertikal */
+    gap: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.menu-item-card:hover {
+    background-color: #f9f9f9;
+    border-color: var(--primary-color);
+}
+
+.menu-item-card input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-color);
+}
+
+.menu-item-card label {
+    display: flex;
+    justify-content: space-between; /* Nama di kiri, harga di kanan */
+    flex-grow: 1; /* Biarkan label mengisi ruang */
+    margin-bottom: 0; /* Hapus margin bawah default label */
+    font-weight: normal; /* Override font-weight default label */
+    align-items: center; /* Sejajar vertikal antara nama dan harga */
+}
+
+.menu-item-card .menu-name {
+    font-weight: bold;
+    color: var(--secondary-color);
+    font-size: 1.1em;
+}
+
+.menu-item-card .menu-price {
+    color: var(--primary-color); /* Harga bisa dengan warna primary */
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* Gaya untuk input quantity yang tersembunyi */
+.menu-quantity-input {
+    width: 60px; /* Lebih kecil */
+    text-align: center;
+    margin-left: auto; /* Dorong ke kanan */
+    display: none; /* Default tersembunyi */
+}
+
+/* Efek saat checkbox dicentang */
+.menu-item-card input[type="checkbox"]:checked + label + .menu-quantity-input {
+    display: block; /* Pastikan input jumlah muncul */
+}
+
+.error-message {
+    color: var(--error-color);
+    font-size: 0.9em;
+    margin-top: -10px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* --- Gaya untuk Rating Bintang --- */
+.rating-section {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.rating-section label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.stars {
+    display: inline-block;
+    direction: rtl;
+    /* Untuk tata letak bintang dari kanan ke kiri */
+}
+
+.stars input[
+    type="radio"] {
+    display: none;
+}
+
+.stars label {
+    color: #ccc;
+    /* Warna default bintang */
+    font-size: 2em;
+    padding: 0 5px;
+    cursor: pointer;
+    transition: color 0.2s;
+    display: inline-block;
+    /* Agar bintang tidak pecah baris */
+}
+
+.stars input[type="radio"]:checked~label {
+    color: #ffc107;
+    /* Warna bintang saat dipilih */
+}
+
+.stars label:hover,
+.stars label:hover~label {
+    color: #ffc107;
+    /* Warna bintang saat di-hover */
+}
+
+
+/* --- Gaya untuk Tombol Submit --- */
+.submit-button {
+    background-color: var(--button-bg);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.submit-button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+/* --- Gaya untuk Notifikasi --- */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1em;
+    font-weight: bold;
+    color: white;
+    z-index: 1000;
+    min-width: 280px;
+    justify-content: center;
+}
+
+.notification.success {
+    background-color: #4CAF50; /* Hijau */
+}
+
+.notification.error {
+    background-color: #f44336; /* Merah */
+}
+
+.notification.info {
+    background-color: #2196F3; /* Biru */
+}
+
+.notification .spinner {
+    display: inline-block;
+    margin-right: 8px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.notification .close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.3em;
+    cursor: pointer;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Responsif */
+@media (max-width: 600px) {
+    .container {
+        margin: 10px;
+        padding: 15px;
+        border-radius: 0; /* Hilangkan lengkungan di layar kecil */
+    }
+    .notification {
+        width: 90%;
+        font-size: 0.9em;
+        padding: 10px 15px;
+    }
+}

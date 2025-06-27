@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemesanan Makanan - Warung Favorit</title>
+    <link rel="stylesheet" href="pemesanan.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <main class="order-form-section">
+        <div class="container">
+            <h1>Pesan Hidangan Favoritmu</h1>
+            <form id="foodOrderForm" class="form-container">
+
+                <div class="form-group">
+                    <label for="NamaCustomer">Nama Lengkap:</label>
+                    <input type="text" id="NamaCustomer" name="NamaCustomer" placeholder="Nama Anda" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="NomorTelepon">Nomor Telepon:</label>
+                    <input type="tel" id="NomorTelepon" name="NomorTelepon" placeholder="Contoh: 081234567890" pattern="[0-9]{10,15}" title="Nomor telepon harus antara 10-15 digit angka." required>
+                </div>
+
+                <h2>Pilihan Makanan & Minuman:</h2>
+                <p>Mohon pilih setidaknya satu item menu.</p>
+                <p id="menu-selection-error" class="error-message" style="display:none;">Mohon pilih setidaknya satu item menu.</p>
+
+                <div class="menu-items-container">
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="nasi-goreng" name="menu_Nasi Goreng" value="Nasi Goreng" data-price="25000">
+                        <label for="nasi-goreng">
+                            <span class="menu-name">Nasi Goreng</span>
+                            <span class="menu-price">Rp 25.000</span>
+                        </label>
+                        <input type="number" id="qty-nasi-goreng" name="qty_Nasi Goreng" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="mie-ayam" name="menu_Mie Ayam" value="Mie Ayam" data-price="20000">
+                        <label for="mie-ayam">
+                            <span class="menu-name">Mie Ayam</span>
+                            <span class="menu-price">Rp 20.000</span>
+                        </label>
+                        <input type="number" id="qty-mie-ayam" name="qty_Mie Ayam" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="bakso-mercon" name="menu_Bakso Mercon" value="Bakso Mercon" data-price="25000">
+                        <label for="bakso-mercon">
+                            <span class="menu-name">Bakso Mercon</span>
+                            <span class="menu-price">Rp 25.000</span>
+                        </label>
+                        <input type="number" id="qty-bakso-mercon" name="qty_Bakso Mercon" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="bakso-biasa" name="menu_Bakso Biasa" value="Bakso Biasa" data-price="17000">
+                        <label for="bakso-biasa">
+                            <span class="menu-name">Bakso Biasa</span>
+                            <span class="menu-price">Rp 17.000</span>
+                        </label>
+                        <input type="number" id="qty-bakso-biasa" name="qty_Bakso Biasa" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="soto-ayam" name="menu_soto-ayam" value="soto-ayam" data-price="25000">
+                        <label for="soto-ayam">
+                            <span class="menu-name">Soto Ayam</span>
+                            <span class="menu-price">Rp 25.000</span>
+                        </label>
+                        <input type="number" id="qty-soto-ayam" name="qty_soto-ayam" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="lalapan-ayam" name="menu_lalapan-ayam" value="Lalapan-Ayam" data-price="25000">
+                        <label for="lalapan-ayam">
+                            <span class="menu-name">Lalapan Ayam</span>
+                            <span class="menu-price">Rp 25.000</span>
+                        </label>
+                        <input type="number" id="qty-lalapan-ayam" name="qty_Lalapan-Ayam" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="seblak" name="menu_seblak" value="Seblak" data-price="15000">
+                        <label for="seblak">
+                            <span class="menu-name">Seblak</span>
+                            <span class="menu-price">Rp 15.000</span>
+                        </label>
+                        <input type="number" id="qty-seblak" name="qty_seblak" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="es-teh" name="menu_es-teh" value="Es-Teh" data-price="7000">
+                        <label for="es-teh">
+                            <span class="menu-name">Es-teh</span>
+                            <span class="menu-price">Rp 7.000</span>
+                        </label>
+                        <input type="number" id="qty-es-teh" name="qty_es-teh" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="lemon-tea" name="menu_lemon-tea" value="Lemon-Tea" data-price="8000">
+                        <label for="lemon-tea">
+                            <span class="menu-name">Lemon Tea</span>
+                            <span class="menu-price">Rp 8.000</span>
+                        </label>
+                        <input type="number" id="qty-lemon-tea" name="qty_lemon-tea" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+                    
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="es-jeruk" name="menu_es-jeruk" value="Es-Jeruk" data-price="5000">
+                        <label for="es-jeruk">
+                            <span class="menu-name">Es Jeruk</span>
+                            <span class="menu-price">Rp 5.000</span>
+                        </label>
+                        <input type="number" id="qty-es-jeruk" name="qty_es-jeruk" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="extrajos-susu" name="menu_extrajos-susu" value="Extrajos-Susu" data-price="8000">
+                        <label for="extrajos-susu">
+                            <span class="menu-name">Extrajos Susu</span>
+                            <span class="menu-price">Rp 8.000</span>
+                        </label>
+                        <input type="number" id="qty-extrajos-susu" name="qty_extrajos-susu" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="kukubima-susu" name="menu_kukubima-susu" value="Kukubima-Susu" data-price="8000">
+                        <label for="kukubima-susu">
+                            <span class="menu-name">Kukubima-Susu</span>
+                            <span class="menu-price">Rp 8.000</span>
+                        </label>
+                        <input type="number" id="qty-kukubima-susu" name="qty_kukubima-susu" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+
+                    <div class="menu-item-card">
+                        <input type="checkbox" id="pop-ice" name="menu_pop-ice" value="Pop-Ice" data-price="5000">
+                        <label for="pop-ice">
+                            <span class="menu-name">Pop Ice</span>
+                            <span class="menu-price">Rp 5.000</span>
+                        </label>
+                        <input type="number" id="qty-pop-ice" name="qty_pop-ice" min="0" value="0" class="menu-quantity-input" style="display:none;">
+                    </div>
+
+                </div>
+
+                    <div class="form-group">
+                        <label for="CatatanTambahan">Catatan / Permintaan Khusus:</label>
+                        <textarea id="customerNotes" name="CatatanTambahan" rows="3" placeholder="Contoh: Tidak pakai sambal, tambah topping bakso, dll." rows="3"></textarea>
+                    </div>
+
+                    <div class="rating-section">
+                        <label>Berikan Rating untuk Masakan Kami:</label>
+                        <div class="stars">
+                            <input type="radio" id="star5" name="Rating" value="5" /><label for="star5"
+                                title="Sangat Baik">★</label>
+                            <input type="radio" id="star4" name="Rating" value="4" /><label for="star4"
+                                title="Baik">★</label>
+                            <input type="radio" id="star3" name="Rating" value="3" /><label for="star3"
+                                title="Cukup Baik">★</label>
+                            <input type="radio" id="star2" name="Rating" value="2" /><label for="star2"
+                                title="Kurang Baik">★</label>
+                            <input type="radio" id="star1" name="Rating" value="1" /><label for="star1"
+                                title="Buruk">★</label>
+                        </div>
+                    </div>
+                    <input type="hidden" id="rating" name="Rating" value="0">
+                </div>
+
+                <button type="submit" class="submit-button">Pesan Sekarang!</button>
+            </form>
+        </div>
+    </main>
+
+    <div id="notification" class="notification" style="display:none;">
+        <span id="notification-message"></span>
+        <div id="spinner" class="spinner" style="display:none;">
+            <i class="fas fa-spinner fa-spin"></i>
+        </div>
+        <button id="notification-close-btn" class="close-button" style="display:none;">&times;</button>
+    </div>
+
+    <script src="pemesanan.js"></script>
+</body>
+</html>

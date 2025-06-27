@@ -1,0 +1,547 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap');
+
+/* Variabel Warna */
+:root {
+    --primary-green: #4CAF50;
+    --dark-green: #2E7D32;
+    --light-accent-green: #E8F5E9;
+    --dark-gray-text: #333333;
+    --medium-gray-text: #666666;
+    --clean-background: #FDFDFD;
+    --pure-white: #FFFFFF;
+    --border-light: #EEEEEE;
+}
+
+/* General Body Styles */
+body {
+    font-family: 'Roboto', sans-serif; /* Gunakan Roboto untuk teks umum */
+    margin: 0;
+    padding: 0;
+    background-color: var(--clean-background); /* Gunakan variabel warna */
+    min-height: 100vh;
+    color: var(--dark-gray-text); /* Gunakan variabel warna */
+    line-height: 1.6;
+}
+
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Header */
+.header {
+    background-color: var(--pure-white); /* Gunakan variabel warna */
+    color: var(--dark-gray-text);
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* Penting untuk positioning dropdown */
+}
+
+.logo {
+    margin: 0;
+    color: var(--dark-green); /* Logo pakai hijau yang lebih gelap */
+}
+
+/* Navigasi Utama (Desktop) */
+.main-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 10px; /* Sesuaikan gap antar item navigasi menjadi 10px */
+}
+
+/* --- GAYA BARU UNTUK NAVIGASI IKON-HOVER (HORIZONTAL) --- */
+/* Target link navigasi yang memiliki class nav-icon-link */
+.main-nav ul li a.nav-icon-link {
+    text-decoration: none;
+    color: var(--dark-gray-text); /* Warna teks default */
+    font-weight: 500;
+    padding: 10px 15px; /* Padding di sekitar ikon */
+    transition: width 0.3s ease, background-color 0.3s ease, color 0.3s ease; /* Transisi untuk lebar, background, dan warna */
+    display: flex; /* Gunakan Flexbox untuk mengatur ikon dan teks */
+    flex-direction: row; /* <--- PASTIKAN INI ADALAH 'row' agar HORIZONTAL! */
+    align-items: center; /* Pusatkan secara vertikal */
+    justify-content: center; /* Pusatkan ikon secara horizontal saat tidak hover */
+    min-width: 50px; /* Lebar minimum untuk hanya menampilkan ikon */
+    height: 40px; /* Tinggi item navigasi */
+    position: relative; /* Untuk positioning teks jika diperlukan (tapi tidak mutlak untuk efek ini) */
+    overflow: hidden; /* Sembunyikan bagian teks yang keluar dari batas */
+    white-space: nowrap; /* Mencegah teks melipat ke baris baru */
+    font-family: 'Roboto', sans-serif; /* Pastikan font body untuk teks navigasi */
+    border-radius: 5px; /* Sedikit rounded corner */
+    box-sizing: border-box; /* Pastikan padding tidak menambah lebar di luar kendali */
+}
+
+
+.main-nav ul li a.nav-icon-link i {
+    font-size: 1.5em; /* Ukuran ikon */
+    margin-right: 0; /* Tidak ada margin di kanan ikon secara default */
+    color: var(--primary-green); /* Warna ikon default */
+    transition: margin-right 0.3s ease, color 0.3s ease; /* Transisi untuk margin dan warna ikon */
+}
+
+/* Efek HOVER untuk ikon di dalam link navigasi */
+.main-nav ul li a.nav-icon-link:hover i {
+    color: var(--dark-green); /* Warna ikon lebih gelap saat hover */
+    margin-right: 10px; /* Tambahkan margin di kanan ikon untuk memisahkan dari teks */
+}
+
+
+/* Gaya untuk teks label di dalam link navigasi */
+.main-nav ul li a.nav-icon-link span {
+    opacity: 0; /* SEMBUNYIKAN teks secara default */
+    width: 0; /* Buat lebar teks 0 agar tidak memakan ruang */
+    overflow: hidden; /* Pastikan teks tidak terlihat saat width 0 */
+    transition: opacity 0.3s ease, width 0.3s ease, margin-left 0.3s ease; /* Transisi saat teks muncul */
+    margin-left: 0; /* Tidak ada margin di kiri teks secara default */
+    font-size: 0.9em; /* Ukuran teks label */
+    color: var(--dark-gray-text); /* Warna teks label */
+}
+
+/* Efek HOVER untuk seluruh area link navigasi */
+.main-nav ul li a.nav-icon-link:hover {
+    width: auto; /* Biarkan lebar menyesuaikan konten (ikon + teks) */
+    justify-content: flex-start; /* Geser konten ke kiri saat hover */
+    background-color: var(--light-accent-green); /* Background saat hover */
+    color: var(--primary-green); /* Warna teks link saat hover (jika ada teks terlihat) */
+    padding-right: 15px; /* Tambahkan padding kanan saat hover agar ada ruang */
+}
+
+
+/* Efek HOVER untuk teks label di dalam link navigasi */
+.main-nav ul li a.nav-icon-link:hover span {
+    opacity: 1; /* TAMPILKAN teks saat hover */
+    width: auto; /* Biarkan teks mengambil lebar alaminya */
+    margin-left: 5px; /* Beri sedikit jarak antara ikon dan teks */
+    overflow: visible; /* Tampilkan teks */
+}
+/* --- AKHIR DARI GAYA BARU UNTUK NAVIGASI IKON-HOVER (HORIZONTAL) --- */
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600; /* Lebih tebal untuk tombol */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'Poppins', sans-serif; /* Tombol pakai Poppins */
+}
+
+.btn-primary {
+    background-color: var(--primary-green);
+    color: var(--pure-white);
+    border: 2px solid var(--primary-green);
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-green); /* Lebih gelap saat hover */
+    border-color: var(--dark-green);
+}
+
+.btn-secondary {
+    background-color: var(--pure-white);
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
+}
+
+.btn-secondary:hover {
+    background-color: var(--light-accent-green);
+}
+
+/* Sections */
+.section {
+    padding: 60px 0;
+    margin-bottom: 20px;
+    background-color: var(--pure-white); /* Warna putih untuk section */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.section h2 {
+    font-family: 'Poppins', sans-serif; /* Judul section pakai Poppins */
+    text-align: center;
+    color: var(--dark-green); /* Judul hijau gelap */
+    margin-bottom: 40px;
+    font-size: 2.8em; /* Sedikit lebih besar */
+    font-weight: 700; /* Sangat tebal */
+}
+
+/* About Section */
+.about-section p {
+    text-align: justify;
+    max-width: 800px;
+    margin: 0 auto 15px auto;
+    color: var(--dark-gray-text);
+    font-size: 1.05em; /* Sedikit lebih besar untuk readability */
+}
+
+
+/* Menu Section */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.menu-item {
+    background-color: var(--pure-white);
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    text-align: center;
+    padding-bottom: 20px;
+    transition: transform 0.3s ease;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu-item:hover {
+    transform: translateY(-5px);
+}
+
+.menu-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.menu-item h3 {
+    color: var(--dark-gray-text);
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+.menu-item p {
+    color: var(--medium-gray-text);
+    font-size: 0.9em;
+    padding: 0 15px;
+    min-height: 50px; /* Agar tinggi item seragam */
+}
+
+.menu-item .price {
+    display: block;
+    font-size: 1.3em;
+    color: var(--primary-green); /* Harga hijau */
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--dark-gray-text); /* Footer background gelap */
+    color: var(--pure-white);
+    padding: 40px 0 20px 0;
+    font-size: 0.9em;
+}
+
+.footer-section h3 {
+    font-family: 'Poppins', sans-serif; /* Judul footer pakai Poppins */
+    color: var(--primary-green); /* Judul footer hijau */
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.footer-section p, .footer-section a {
+    color: var(--medium-gray-text); /* Teks footer sedikit lebih pudar */
+}
+
+.footer-section a:hover {
+    color: var(--primary-green); /* Hijau saat hover */
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--medium-gray-text); /* Garis pemisah di footer */
+    color: var(--medium-gray-text);
+}
+
+/* --- RESPONSIVE NAVIGATION (NAVBAR DROPDOWN) --- */
+
+/* Hamburger Menu Toggle Button (Default: Tersembunyi di Desktop) */
+.menu-toggle {
+    display: none; /* Sembunyikan di desktop */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    flex-direction: column; /* Untuk menata bar hamburger */
+    justify-content: space-between;
+    width: 30px;
+    height: 25px;
+}
+
+.menu-toggle .bar {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: #333; /* Warna bar hamburger */
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Header Scroll Effect (Sama seperti sebelumnya) */
+.header.scrolled {
+    padding: 10px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.hero-section {
+    position: relative;
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    color: var(--pure-white);
+    background: url('image/background.jpg') no-repeat center center/cover;
+    overflow-y: hidden;
+    padding: 20px;
+}
+
+/* Overlay transparan di atas gambar agar teks lebih mudah dibaca */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Hitam transparan 50% */
+    z-index: 1; /* Pastikan overlay di atas gambar tapi di bawah teks */
+}
+
+.hero-content {
+    position: relative; /* Penting agar konten berada di atas overlay */
+    z-index: 2;
+    max-width: 800px; /* Lebar maksimal konten teks */
+    padding: 20px;
+    margin: 0 auto; /* Pusatkan div hero-content */
+}
+
+.hero-title {
+    font-family: 'Poppins', sans-serif; /* Menggunakan font Poppins */
+    font-size: 3.5em; /* Ukuran judul besar */
+    font-weight: 700; /* Tebal */
+    margin-bottom: 20px;
+    color: var(--pure-white); /* Warna judul putih */
+    line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7); /* Efek bayangan teks agar lebih menonjol */
+}
+
+.hero-subtitle {
+    font-size: 1.2em; /* Ukuran sub-judul */
+    margin-bottom: 30px;
+    color: var(--light-accent-green); /* Warna sub-judul yang lebih terang */
+    line-height: 1.6;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7); /* Efek bayangan teks */
+}
+
+.hero-buttons {
+    display: flex; /* Mengatur tombol berdampingan */
+    justify-content: center; /* Pusatkan tombol */
+    gap: 20px; /* Jarak antar tombol */
+    margin-top: 30px;
+}
+
+/* --- Responsive Adjustments untuk Hero Section --- */
+@media (max-width: 992px) {
+    .hero-title {
+        font-size: 2.8em;
+    }
+    .hero-subtitle {
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-grid {
+        /* Jika Anda ingin item menu tetap lebih besar di tablet */
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        justify-content: center; /* Mungkin ingin memusatkan grid di tablet/mobile jika tidak mengisi penuh */
+    }
+}
+
+@media (max-width: 576px) {
+    .menu-grid {
+        grid-template-columns: 1fr; /* Satu kolom di mobile */
+        padding: 0 10px; /* Tambahkan sedikit padding jika item menu terlalu lebar */
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        height: 60vh; /* Tinggi sedikit lebih pendek di mobile */
+    }
+    .hero-title {
+        font-size: 2.2em;
+    }
+    .hero-subtitle {
+        font-size: 1em;
+    }
+    .hero-buttons {
+        flex-direction: column; /* Tombol jadi vertikal di mobile */
+        gap: 15px;
+    }
+    .hero-buttons .btn {
+        width: 80%; /* Lebar tombol di mobile */
+        margin: 0 auto; /* Pusatkan tombol */
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 1.8em;
+    }
+    .hero-subtitle {
+        font-size: 0.9em;
+    }
+    .hero-buttons .btn {
+        width: 90%; /* Lebar tombol di layar sangat kecil */
+    }
+}
+
+/* --- AKHIR GAYA UNTUK HERO SECTION --- */
+
+/* Media Query untuk Mobile/Tablet (max-width: 768px) */
+@media (max-width: 768px) {
+    .header .container {
+        flex-wrap: wrap; /* Agar elemen bisa wrap ke bawah */
+        justify-content: space-between; /* Logo di kiri, toggle di kanan */
+    }
+
+    .logo {
+        flex-grow: 1; /* Agar logo bisa mengambil ruang sisa jika ada */
+    }
+
+    /* Tampilkan tombol hamburger */
+    .menu-toggle {
+        display: flex;
+        order: 2; /* Pastikan tombol berada di kanan, setelah logo */
+    }
+
+    /* Sembunyikan navigasi utama secara default di mobile */
+    .main-nav {
+        display: none; /* Sembunyikan navigasi default */
+        flex-direction: column; /* Item navigasi ke bawah */
+        width: 250px; /* Lebar dropdown */
+        position: absolute; /* Posisikan sebagai dropdown */
+        top: 100%; /* Di bawah header */
+        right: 0; /* Di sisi kanan */
+        background-color: #fff; /* Warna background dropdown */
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Bayangan dropdown */
+        border-radius: 5px;
+        overflow: hidden; /* Pastikan konten tidak keluar */
+        padding: 10px 0;
+        z-index: 999; /* Pastikan di atas konten lain */
+    }
+
+    .main-nav ul {
+        flex-direction: column; /* Item list ke bawah */
+        width: 100%; /* Lebar penuh dropdown */
+        gap: 0; /* Hilangkan jarak antar list */
+    }
+
+    .main-nav ul li {
+        width: 100%;
+    }
+
+    .main-nav ul li a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 15px 20px;
+    width: 100%;
+    border-bottom: 1px solid var(--border-light);
+    text-align: left;
+    color: var(--dark-gray-text);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    /*RESET GAYA KHUSUS EKSTOP UNTUK MOBAIL. */
+    min-width: unset;
+    height: auto;
+    position: static;
+    overflow: visible;
+    background-color: transparent;
+    border-radius: 0;
+    }
+
+    .min-navul li a i {
+        margin-right: 10px;
+        margin-bottom: 0;
+        font-size: 1.2em;
+        color: var(--primary-green);
+        transform: none;
+    }
+
+    .min-nav ul li a span {
+        opacity: 1;
+        position: static;
+        transform: none;
+        font-size: 1em;
+        white-space: normal;
+        color: var(--dark-gray-text);
+    }
+
+    .main-nav ul li:last-child a {
+        border-bottom: none; /* Tidak ada garis pemisah di item terakhir */
+    }
+
+    .main-nav ul li a.btn-primary {
+        margin: 10px 20px; /* Margin untuk tombol "Pesan Sekarang" di dropdown */
+        width: auto;
+        display: block; /* Tombol juga block */
+        text-align: center;
+    }
+
+
+    /* Kelas JavaScript untuk menampilkan navigasi */
+    .main-nav.active {
+        display: flex; /* Tampilkan navigasi ketika kelas 'active' ditambahkan */
+    }
+
+    /* Efek Animasi Hamburger Icon (Opsional, tapi bagus) */
+    .menu-toggle.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    .menu-toggle.active .bar:nth-child(2) {
+        opacity: 0; /* Hilangkan bar tengah */
+    }
+    .menu-toggle.active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    /* General responsive adjustments */
+    .footer .container {
+        flex-direction: column;
+        text-align: center;
+    }
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .footer-section {
+        min-width: unset;
+    }
+}
