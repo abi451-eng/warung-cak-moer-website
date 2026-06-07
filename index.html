@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Cak Moer" />
-<link rel="manifest" href='data:application/manifest+json,{"name":"Warung Makan Cak Moer","short_name":"Cak Moer","start_url":".","display":"standalone","background_color":"%2315301f","theme_color":"%2315301f","icons":[{"src":"image/baksobiasa.jpg","sizes":"512x512","type":"image/jpeg","purpose":"any"}]}' />
+<link rel="manifest" href='data:application/manifest+json,{"name":"Warung Makan Cak Moer","short_name":"Cak Moer","start_url":".","display":"standalone","background_color":"%2315301f","theme_color":"%2315301f","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 512 512%27%3E%3Crect width=%27512%27 height=%27512%27 rx=%2796%27 fill=%27%2315301f%27/%3E%3Ctext x=%27256%27 y=%27336%27 font-family=%27Georgia,serif%27 font-size=%27240%27 font-weight=%27700%27 fill=%27%2346b06e%27 text-anchor=%27middle%27%3ECM%3C/text%3E%3C/svg%3E","sizes":"512x512","type":"image/svg+xml","purpose":"any"}]}' />
 
 <!-- Font: Fraunces (display, hangat) + Plus Jakarta Sans (body, buatan Indonesia) -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -138,8 +138,8 @@ section{padding:58px 0}
 @keyframes rise{to{opacity:1;transform:none}}
 .card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
 .thumb{position:relative;aspect-ratio:4/3;background:var(--surface-2);overflow:hidden}
-.thumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
-.card:hover .thumb img{transform:scale(1.06)}
+.thumb img,.thumb svg{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.card:hover .thumb img,.card:hover .thumb svg{transform:scale(1.06)}
 .thumb.noimg{display:grid;place-items:center;color:var(--brand)}
 .thumb.noimg i{font-size:40px;opacity:.5}
 .thumb.noimg img{display:none}
@@ -370,8 +370,9 @@ footer a:hover{color:var(--gold)}
 const CONFIG = {
   // Nomor WhatsApp tujuan pesanan. Format: 62 + nomor tanpa angka 0 di depan.
   // Contoh: 0812-3456-7890  ->  6281234567890   (GANTI dengan nomor asli warung)
-  waNumber: "6281234567890",
-  // Folder foto menu (relatif terhadap index.html). Pastikan folder "image" ikut di-deploy.
+  waNumber: "6281240915134",
+  // Folder foto menu. Taruh foto di folder ini dgn nama sesuai field "img" di bawah.
+  // Kalau foto belum ada, otomatis dipakai ilustrasi SVG sebagai cadangan.
   imgPath: "image/"
 };
 
@@ -394,6 +395,121 @@ const MENU = [
   {id:13, nama:"Lemon Tea",          harga:7000,  cat:"minuman",  img:"lemontea.jpg",        icon:"ti-glass-full", desc:"Teh lemon asam manis."},
   {id:14, nama:"Pop Ice",            harga:5000,  cat:"minuman",  img:"popice.jpg",          icon:"ti-cup",        desc:"Es blender aneka rasa."}
 ];
+
+/* =========================================================
+   ILUSTRASI SVG (gambar tiap menu, tertanam di file ini)
+   ========================================================= */
+const ART = {
+  1:{type:'rice'},
+  2:{type:'noodle', broth:'#e7b84d'},
+  3:{type:'soup',   broth:'#cf9a52', balls:'#a9744c'},
+  4:{type:'soup',   broth:'#c45a3a', balls:'#9c4528', flame:true},
+  5:{type:'chicken',meat:'#cf9148',  meat2:'#b9772f'},
+  6:{type:'chicken',meat:'#7e4a28',  meat2:'#5e3318', grill:true},
+  7:{type:'soup',   broth:'#d0573b', balls:'#e0703f', seblak:true},
+  8:{type:'soup',   broth:'#e3b23c', balls:'#f0d27a', soto:true},
+  9:{type:'drink',  liquid:'#9c5a2a', ice:true, straw:'#c8442f'},
+  10:{type:'drink', liquid:'#f08a2a', ice:true, straw:'#e3b23c'},
+  11:{type:'drink', liquid:'#efe6d2', foam:true, straw:'#5aa05a'},
+  12:{type:'drink', liquid:'#e7c7b0', foam:true, straw:'#c8442f'},
+  13:{type:'drink', liquid:'#d8a23c', ice:true, lemon:true, straw:'#5aa05a'},
+  14:{type:'drink', liquid:'#e98ab0', ice:true, straw:'#46b06e'}
+};
+
+const STEAM = x => `<path d="M${x-6} 20 q-3 -5 0 -9" stroke="#cbb892" stroke-width="2" fill="none" stroke-linecap="round" opacity=".55"/><path d="M${x+6} 20 q3 -5 0 -9" stroke="#cbb892" stroke-width="2" fill="none" stroke-linecap="round" opacity=".55"/>`;
+
+function artRice(){
+  return `
+   <ellipse cx="50" cy="64" rx="32" ry="5" fill="#000" opacity=".06"/>
+   <ellipse cx="50" cy="56" rx="33" ry="10" fill="#ffffff"/>
+   <ellipse cx="50" cy="56" rx="33" ry="10" fill="none" stroke="#e7ddc8" stroke-width="1"/>
+   <path d="M26 54 Q50 36 74 54 Q50 60 26 54Z" fill="#f0d28f"/>
+   <g fill="#d9a441"><circle cx="40" cy="50" r="1.3"/><circle cx="52" cy="48" r="1.3"/><circle cx="60" cy="52" r="1.3"/><circle cx="46" cy="53" r="1.3"/></g>
+   <g fill="#5aa05a"><circle cx="44" cy="49" r="1.4"/><circle cx="58" cy="50" r="1.4"/></g>
+   <ellipse cx="58" cy="46" rx="9" ry="6" fill="#fff7e6"/>
+   <circle cx="58" cy="46" r="3.4" fill="#f4a93b"/>
+   <path d="M36 45 q6 -2 9 1" stroke="#c8442f" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+   ${STEAM(50)}`;
+}
+function artSoup(a){
+  let tops = `<circle cx="42" cy="40" r="6" fill="${a.balls}"/><circle cx="56" cy="41" r="6.5" fill="${a.balls}"/><circle cx="50" cy="36" r="5" fill="${a.balls}"/>`;
+  if(a.soto) tops += `<rect x="40" y="39" width="20" height="2.6" rx="1.3" fill="#f7e7a6"/><circle cx="46" cy="34" r="1.6" fill="#5aa05a"/><circle cx="55" cy="35" r="1.6" fill="#5aa05a"/>`;
+  if(a.seblak) tops = `<path d="M40 38 q5 -4 10 0 q5 4 10 0" stroke="#7a3b22" stroke-width="2" fill="none"/><circle cx="44" cy="40" r="3" fill="#e8b04a"/><circle cx="56" cy="40" r="3" fill="#e8b04a"/><circle cx="50" cy="42" r="2.4" fill="#7a3b22"/>`;
+  const top = a.flame
+    ? `<path d="M50 18 q5 6 0 11 q-5 -5 0 -11Z" fill="#f0892a"/><path d="M50 21 q3 4 0 7 q-3 -3 0 -7Z" fill="#f4c430"/>`
+    : STEAM(50);
+  return `
+   <ellipse cx="50" cy="62" rx="30" ry="5" fill="#000" opacity=".06"/>
+   <path d="M22 42 Q22 64 50 64 Q78 64 78 42 Z" fill="#ffffff"/>
+   <path d="M22 42 Q22 64 50 64 Q78 64 78 42 Z" fill="none" stroke="#e7ddc8" stroke-width="1"/>
+   <ellipse cx="50" cy="42" rx="28" ry="8" fill="${a.broth}"/>
+   ${tops}
+   <path d="M22 42 Q50 50 78 42" stroke="#ffffff" stroke-width="2" fill="none" opacity=".4"/>
+   ${top}`;
+}
+function artNoodle(a){
+  return `
+   <ellipse cx="50" cy="62" rx="30" ry="5" fill="#000" opacity=".06"/>
+   <path d="M22 42 Q22 64 50 64 Q78 64 78 42 Z" fill="#ffffff"/>
+   <path d="M22 42 Q22 64 50 64 Q78 64 78 42 Z" fill="none" stroke="#e7ddc8" stroke-width="1"/>
+   <ellipse cx="50" cy="42" rx="28" ry="8" fill="${a.broth}"/>
+   <g stroke="#f1d27a" stroke-width="2.2" fill="none" stroke-linecap="round">
+     <path d="M34 42 q4 -5 9 -2 q4 3 9 -1 q4 -3 9 1"/>
+     <path d="M34 45 q5 -3 10 0 q5 3 10 0 q4 -2 8 0"/>
+   </g>
+   <g fill="#a9744c"><rect x="45" y="36" width="5" height="5" rx="1.2"/><rect x="53" y="38" width="5" height="5" rx="1.2"/></g>
+   <circle cx="40" cy="39" r="1.6" fill="#5aa05a"/><circle cx="62" cy="40" r="1.6" fill="#5aa05a"/>
+   ${STEAM(50)}`;
+}
+function artChicken(a){
+  const marks = a.grill
+    ? `<g stroke="#3a2012" stroke-width="1.4" opacity=".7"><line x1="40" y1="45" x2="50" y2="41"/><line x1="44" y1="49" x2="54" y2="45"/></g>`
+    : `<ellipse cx="46" cy="43" rx="3" ry="2" fill="#ffffff" opacity=".25"/>`;
+  return `
+   <ellipse cx="50" cy="62" rx="33" ry="5" fill="#000" opacity=".06"/>
+   <ellipse cx="50" cy="54" rx="34" ry="11" fill="#ffffff"/>
+   <ellipse cx="50" cy="54" rx="34" ry="11" fill="none" stroke="#e7ddc8" stroke-width="1"/>
+   <path d="M38 50 Q36 38 50 38 Q62 38 60 50 Q50 56 38 50Z" fill="${a.meat}"/>
+   <path d="M38 50 Q36 38 50 38 Q62 38 60 50 Q50 56 38 50Z" fill="none" stroke="${a.meat2}" stroke-width="1.5"/>
+   ${marks}
+   <rect x="49" y="49" width="9" height="4" rx="2" transform="rotate(18 53 51)" fill="${a.meat2}"/>
+   <circle cx="30" cy="52" r="5" fill="#c8442f"/>
+   <circle cx="70" cy="51" r="4" fill="#8fc97a"/><circle cx="70" cy="51" r="1.6" fill="#cfe9b8"/>
+   <circle cx="64" cy="55" r="3.2" fill="#e0573b"/>
+   ${STEAM(52)}`;
+}
+function artDrink(a){
+  const glass  = "M37 24 L63 24 L57 66 Q57 70 53 70 L47 70 Q43 70 43 66 Z";
+  const liquid = "M39 31 L61 31 L57 66 Q57 69 53 69 L47 69 Q43 69 43 66 Z";
+  const ice  = a.ice  ? `<g fill="#ffffff" opacity=".5"><rect x="44" y="36" width="8" height="8" rx="2" transform="rotate(-12 48 40)"/><rect x="50" y="45" width="7" height="7" rx="2" transform="rotate(15 53 48)"/></g>` : '';
+  const foam = a.foam ? `<ellipse cx="50" cy="31" rx="11" ry="3.4" fill="#fffaf0"/>` : '';
+  const lemon = a.lemon ? `<circle cx="60" cy="27" r="5.5" fill="#f2e24c"/><path d="M60 27 L60 21.5 M60 27 L64.8 28.7 M60 27 L55.8 30.6" stroke="#d8c020" stroke-width="0.9"/>` : '';
+  const straw = `<line x1="55" y1="18" x2="50" y2="40" stroke="${a.straw}" stroke-width="3" stroke-linecap="round"/>`;
+  return `
+   <ellipse cx="50" cy="73" rx="20" ry="3.5" fill="#000" opacity=".06"/>
+   <path d="${glass}" fill="#eef4f1"/>
+   <path d="${liquid}" fill="${a.liquid}"/>
+   ${ice}${foam}
+   <path d="${glass}" fill="none" stroke="#cdd9d2" stroke-width="1.5"/>
+   <path d="M41 28 L44 60" stroke="#ffffff" stroke-width="2" opacity=".5" stroke-linecap="round"/>
+   ${straw}${lemon}`;
+}
+function svgFor(m){
+  const a = ART[m.id] || {};
+  const bg = m.cat === 'minuman' ? '#e7f1ea' : '#f5ecd9';
+  let inner = '';
+  if(a.type === 'rice')    inner = artRice();
+  else if(a.type === 'noodle')  inner = artNoodle(a);
+  else if(a.type === 'soup')    inner = artSoup(a);
+  else if(a.type === 'chicken') inner = artChicken(a);
+  else if(a.type === 'drink')   inner = artDrink(a);
+  return `<svg viewBox="0 0 100 80" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${m.nama}"><rect width="100" height="80" fill="${bg}"/>${inner}</svg>`;
+}
+// Dipakai saat foto tidak ditemukan -> ganti otomatis dgn ilustrasi SVG
+function imgFallback(img, id){
+  const m = MENU.find(x => x.id === id);
+  if(m) img.outerHTML = svgFor(m);
+}
 
 /* =========================================================
    STATE + util
@@ -424,8 +540,7 @@ function renderMenu(){
   grid.innerHTML = list.map((m,i)=>`
     <article class="card" style="animation-delay:${i*0.04}s">
       <div class="thumb">
-        <img src="${CONFIG.imgPath}${m.img}" alt="${m.nama}" loading="lazy"
-             onerror="this.parentElement.classList.add('noimg');this.parentElement.insertAdjacentHTML('beforeend','<i class=\\'ti ${m.icon}\\'></i>')">
+        <img src="${CONFIG.imgPath}${m.img}" alt="${m.nama}" loading="lazy" onerror="imgFallback(this, ${m.id})">
         <span class="tag-cat">${m.cat === 'makanan' ? 'Makanan' : 'Minuman'}</span>
       </div>
       <div class="card-body">
@@ -473,8 +588,7 @@ function renderCart(){
   body.innerHTML = ids.map(id=>{
     const m = MENU.find(x=>x.id==id), q = cart[id];
     return `<div class="ci">
-      <img src="${CONFIG.imgPath}${m.img}" alt="${m.nama}"
-           onerror="this.outerHTML='<div class=\\'ci-i\\'><i class=\\'ti ${m.icon}\\'></i></div>'">
+      <div class="ci-i" style="padding:0;overflow:hidden"><img src="${CONFIG.imgPath}${m.img}" alt="${m.nama}" style="width:100%;height:100%;object-fit:cover" onerror="imgFallback(this, ${m.id})"></div>
       <div class="ci-info">
         <h4>${m.nama}</h4>
         <div class="p">${rupiah(m.harga)} × ${q} = <b>${rupiah(m.harga*q)}</b></div>
