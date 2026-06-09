@@ -423,7 +423,7 @@ footer p,footer a{font-size:15.5px;line-height:1.95}
       </div>
     </div>
   </div>
-  <div class="copy">© <span id="year">2026</span> Warung Makan Cak Moer · Semua hak cipta dilindungi.<span class="admin-link" onclick="openAdmin()">Kelola Menu</span></div>
+  <div class="copy">© <span id="year">2026</span> Warung Makan Cak Moer · Semua hak cipta dilindungi.</div>
 </footer>
 
 <!-- ====== BOTTOM NAV ====== -->
@@ -998,6 +998,17 @@ async function saveAdmin(){
   });
   document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeCart(); closeAdmin(); } });
   if(location.hash === "#admin") openAdmin();
+
+  // Akses admin tersembunyi: ketuk logo "CM" 5x dalam 1,2 detik
+  (function(){
+    let taps = 0, timer;
+    const mark = document.querySelector('.logo .mark');
+    if(!mark) return;
+    mark.addEventListener('click', ()=>{
+      taps++; clearTimeout(timer); timer = setTimeout(()=> taps = 0, 1200);
+      if(taps >= 5){ taps = 0; openAdmin(); }
+    });
+  })();
 })();
 </script>
 </body>
