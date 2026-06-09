@@ -1,0 +1,9 @@
+{
+  "name": "warung-cak-moer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Website Warung Makan Cak Moer + admin menu (Vercel Blob)",
+  "dependencies": {
+    "@vercel/blob": "latest"
+  }
+}
