@@ -316,6 +316,26 @@ footer p,footer a{font-size:15.5px;line-height:1.95}
 .save-state{font-size:13px;color:var(--text-soft);text-align:center;padding:8px}
 .admin-link{cursor:pointer;color:rgba(246,244,236,.5);font-size:12.5px;margin-left:6px}
 .admin-link:hover{color:var(--gold)}
+
+/* ===== Menu cepat dari logo ===== */
+.logo-wrap{position:relative}
+.logo{background:none;border:none;cursor:pointer;font-family:inherit;color:inherit;
+  padding:4px 8px 4px 4px;border-radius:13px;display:flex;align-items:center;gap:11px;transition:background .15s}
+.logo:hover{background:var(--surface-2)}
+.logo-caret{font-size:16px;color:var(--text-soft);transition:transform .25s}
+.logo[aria-expanded="true"] .logo-caret{transform:rotate(180deg)}
+.brandmenu{position:absolute;top:calc(100% + 8px);left:0;min-width:212px;background:var(--surface);
+  border:1px solid var(--line);border-radius:15px;box-shadow:0 18px 44px -14px rgba(0,0,0,.45);
+  padding:6px;z-index:55;opacity:0;visibility:hidden;transform:translateY(-6px) scale(.98);
+  transform-origin:top left;transition:.18s ease}
+.brandmenu.open{opacity:1;visibility:visible;transform:none}
+.bm-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:none;
+  cursor:pointer;font-family:inherit;font-size:14.5px;color:var(--text);padding:11px 12px;border-radius:11px;
+  transition:background .14s;text-decoration:none}
+.bm-item:hover{background:var(--surface-2)}
+.bm-item i{font-size:19px;color:var(--brand);width:22px;flex:none;text-align:center}
+.bm-div{height:1px;background:var(--line);margin:6px 8px}
+.bm-admin,.bm-admin i{color:var(--text-soft)}
 </style>
 
 <!-- Ikon Tabler -->
@@ -326,10 +346,22 @@ footer p,footer a{font-size:15.5px;line-height:1.95}
 <!-- ====== HEADER ====== -->
 <header>
   <div class="wrap nav">
-    <a href="#top" class="logo">
-      <span class="mark">CM</span>
-      <span class="name">Cak Moer<small>Warung Makan</small></span>
-    </a>
+    <div class="logo-wrap">
+      <button class="logo" id="logoBtn" aria-haspopup="true" aria-expanded="false" aria-label="Buka menu cepat">
+        <span class="mark">CM</span>
+        <span class="name">Cak Moer<small>Warung Makan</small></span>
+        <i class="ti ti-chevron-down logo-caret" aria-hidden="true"></i>
+      </button>
+      <div class="brandmenu" id="brandMenu" role="menu" aria-label="Menu cepat">
+        <button class="bm-item" role="menuitem" onclick="bmGo('top')"><i class="ti ti-home"></i> Beranda</button>
+        <button class="bm-item" role="menuitem" onclick="bmGo('menu')"><i class="ti ti-tools-kitchen-2"></i> Menu</button>
+        <button class="bm-item" role="menuitem" onclick="bmGo('about')"><i class="ti ti-info-circle"></i> Tentang kami</button>
+        <a class="bm-item" role="menuitem" id="bmMaps" target="_blank" rel="noopener"><i class="ti ti-map-pin"></i> Lokasi warung</a>
+        <a class="bm-item" role="menuitem" id="bmWa" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i> Hubungi kami</a>
+        <div class="bm-div"></div>
+        <button class="bm-item bm-admin" role="menuitem" onclick="bmAdmin()"><i class="ti ti-settings"></i> Kelola menu</button>
+      </div>
+    </div>
     <nav class="nav-links">
       <a href="#about">Tentang</a>
       <a href="#menu">Menu</a>
@@ -834,6 +866,17 @@ $("#themeBtn").onclick = ()=>{
   $("#footPhone").href = "tel:+" + CONFIG.waNumber;
 })();
 
+/* Menu cepat dari logo "CM" */
+function toggleBrand(open){
+  const m = $("#brandMenu"), b = $("#logoBtn");
+  if(!m || !b) return;
+  const willOpen = (open === undefined) ? !m.classList.contains('open') : open;
+  m.classList.toggle('open', willOpen);
+  b.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+}
+function bmGo(id){ toggleBrand(false); const el = document.getElementById(id); if(el) el.scrollIntoView({ behavior:'smooth' }); }
+function bmAdmin(){ toggleBrand(false); openAdmin(); }
+
 // Tahun hak cipta otomatis
 (function(){ const y = document.getElementById("year"); if(y) y.textContent = new Date().getFullYear(); })();
 
@@ -996,19 +1039,15 @@ async function saveAdmin(){
     document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
     c.classList.add("active"); curCat = c.dataset.cat; renderMenu();
   });
-  document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeCart(); closeAdmin(); } });
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeCart(); closeAdmin(); toggleBrand(false); } });
   if(location.hash === "#admin") openAdmin();
 
-  // Akses admin tersembunyi: ketuk logo "CM" 5x dalam 1,2 detik
-  (function(){
-    let taps = 0, timer;
-    const mark = document.querySelector('.logo .mark');
-    if(!mark) return;
-    mark.addEventListener('click', ()=>{
-      taps++; clearTimeout(timer); timer = setTimeout(()=> taps = 0, 1200);
-      if(taps >= 5){ taps = 0; openAdmin(); }
-    });
-  })();
+  // Menu cepat dari logo
+  $("#logoBtn").addEventListener('click', e=>{ e.stopPropagation(); toggleBrand(); });
+  document.addEventListener('click', e=>{ if(!e.target.closest('.logo-wrap')) toggleBrand(false); });
+  $("#bmWa").href = `https://wa.me/${CONFIG.waNumber}`;
+  $("#bmMaps").href = "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent("Warung Makan Cak Moer, Jl. Jambu No.73 Wonorejo Pir IV Arso Timur");
 })();
 </script>
 </body>
