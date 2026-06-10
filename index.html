@@ -340,6 +340,32 @@ footer p,footer a{font-size:15.5px;line-height:1.95}
 .bm-item i{font-size:19px;color:var(--brand);width:22px;flex:none;text-align:center}
 .bm-div{height:1px;background:var(--line);margin:6px 8px}
 .bm-admin,.bm-admin i{color:var(--text-soft)}
+
+/* ===== Panel Katering / Pesanan Khusus ===== */
+.cater-mask{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:80;display:none}
+.cater-mask.open{display:block}
+.cater{position:fixed;z-index:85;inset:0;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;
+  transform:translateY(8px);opacity:0;pointer-events:none;transition:.28s}
+.cater.open{transform:none;opacity:1;pointer-events:auto}
+@media(min-width:680px){.cater{inset:24px;border-radius:22px;max-width:680px;margin:0 auto;max-height:calc(100% - 48px);box-shadow:0 30px 70px -20px rgba(0,0,0,.5)}}
+.cater-top{flex:none;background:var(--bg);display:flex;align-items:center;justify-content:space-between;
+  padding:16px 18px;padding-top:calc(16px + env(safe-area-inset-top));border-bottom:1px solid var(--line)}
+.cater-top h3{font-family:'Fraunces',serif;font-size:19px;display:flex;align-items:center;gap:8px}
+.cater-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.cater-in{padding:18px}
+.cater-foot{flex:none;background:var(--bg);border-top:1px solid var(--line);
+  padding:14px 18px;padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+.cater-hero{background:var(--brand-strong);color:var(--cream);border-radius:16px;padding:20px;margin-bottom:18px}
+.cater-hero h2{font-size:21px;margin-bottom:6px}
+.cater-hero p{font-size:14px;color:rgba(246,244,236,.82);line-height:1.55}
+.cater-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:9px}
+.cater-chip{font-family:inherit;font-size:13.5px;font-weight:600;padding:9px 15px;border-radius:999px;
+  border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer;transition:.15s}
+.cater-chip:hover{border-color:var(--brand);color:var(--brand)}
+.cater-chip:active{transform:scale(.96)}
+.cater .row.two{display:grid;gap:12px}
+@media(min-width:520px){.cater .row.two{grid-template-columns:1fr 1fr}}
+.cater-note{font-size:12.5px;color:var(--text-soft);margin-top:4px;text-align:center}
 </style>
 
 <!-- Ikon Tabler -->
@@ -359,6 +385,7 @@ footer p,footer a{font-size:15.5px;line-height:1.95}
       <div class="brandmenu" id="brandMenu" role="menu" aria-label="Menu cepat">
         <button class="bm-item" role="menuitem" onclick="bmGo('top')"><i class="ti ti-home"></i> Beranda</button>
         <button class="bm-item" role="menuitem" onclick="bmGo('menu')"><i class="ti ti-tools-kitchen-2"></i> Menu</button>
+        <button class="bm-item" role="menuitem" onclick="bmCater()"><i class="ti ti-chef-hat"></i> Katering / pesanan khusus</button>
         <button class="bm-item" role="menuitem" onclick="bmGo('about')"><i class="ti ti-info-circle"></i> Tentang kami</button>
         <a class="bm-item" role="menuitem" id="bmMaps" target="_blank" rel="noopener"><i class="ti ti-map-pin"></i> Lokasi warung</a>
         <a class="bm-item" role="menuitem" id="bmWa" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i> Hubungi kami</a>
@@ -539,6 +566,38 @@ footer p,footer a{font-size:15.5px;line-height:1.95}
   <div class="admin-foot" id="admFoot" style="display:none">
     <div class="save-state" id="adm_state"></div>
     <button class="btn btn-block" onclick="saveAdmin()"><i class="ti ti-cloud-upload"></i> Simpan &amp; Publikasikan</button>
+  </div>
+</section>
+
+<!-- ====== KATERING / PESANAN KHUSUS ====== -->
+<div class="cater-mask" id="caterMask" onclick="closeCater()"></div>
+<section class="cater" id="cater" aria-label="Katering dan pesanan khusus">
+  <div class="cater-top">
+    <h3><i class="ti ti-chef-hat"></i> Katering &amp; Pesanan Khusus</h3>
+    <button class="icon-btn" onclick="closeCater()" aria-label="Tutup"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="cater-scroll">
+    <div class="cater-in">
+      <div class="cater-hero">
+        <h2>Pesan sesuai acaramu</h2>
+        <p>Nasi kotak, tumpeng, prasmanan, snack box, atau menu khusus untuk arisan, rapat, syukuran, dan acara lainnya. Ceritakan kebutuhanmu, kami siapkan.</p>
+      </div>
+
+      <div class="field"><label>Jenis pesanan (pilih cepat atau tulis sendiri)</label>
+        <div class="cater-chips" id="caterChips"></div>
+        <input id="c_jenis" placeholder="Contoh: Nasi kotak ayam bakar">
+      </div>
+      <div class="row two">
+        <div class="field"><label>Perkiraan jumlah / porsi</label><input id="c_porsi" inputmode="numeric" placeholder="Contoh: 50 kotak"></div>
+        <div class="field"><label>Tanggal dibutuhkan</label><input id="c_tanggal" type="date"></div>
+      </div>
+      <div class="field"><label>Nama pemesan</label><input id="c_nama" placeholder="Nama kamu"></div>
+      <div class="field"><label>Detail / permintaan khusus</label><textarea id="c_detail" placeholder="Ceritakan menunya, anggaran, lokasi antar, jam, dll."></textarea></div>
+      <p class="cater-note">Setelah dikirim, kamu diarahkan ke WhatsApp untuk lanjut diskusi &amp; konfirmasi harga.</p>
+    </div>
+  </div>
+  <div class="cater-foot">
+    <button class="btn btn-wa" style="width:100%;justify-content:center" onclick="caterCheckout()"><i class="ti ti-brand-whatsapp"></i> Kirim via WhatsApp</button>
   </div>
 </section>
 
@@ -889,6 +948,34 @@ function toggleBrand(open){
 }
 function bmGo(id){ toggleBrand(false); const el = document.getElementById(id); if(el) el.scrollIntoView({ behavior:'smooth' }); }
 function bmAdmin(){ toggleBrand(false); openAdmin(); }
+function bmCater(){ toggleBrand(false); openCater(); }
+
+/* Katering / Pesanan Khusus */
+const CATER_TYPES = ['Nasi kotak','Tumpeng','Prasmanan','Snack box','Aneka gorengan','Bakso partai','Lainnya'];
+function renderCaterChips(){
+  const box = $("#caterChips"); if(!box || box.dataset.done) return;
+  box.innerHTML = CATER_TYPES.map(t => `<button type="button" class="cater-chip" onclick="setCaterType('${t}')">${t}</button>`).join("");
+  box.dataset.done = "1";
+}
+function setCaterType(t){ const inp = $("#c_jenis"); inp.value = (t === 'Lainnya') ? '' : t; inp.focus(); }
+function openCater(){ renderCaterChips(); $("#caterMask").classList.add("open"); $("#cater").classList.add("open"); document.body.style.overflow = "hidden"; }
+function closeCater(){ $("#caterMask").classList.remove("open"); $("#cater").classList.remove("open"); document.body.style.overflow = ""; }
+function caterCheckout(){
+  const jenis = $("#c_jenis").value.trim();
+  const porsi = $("#c_porsi").value.trim();
+  const tgl   = $("#c_tanggal").value;
+  const nama  = $("#c_nama").value.trim();
+  const detail= $("#c_detail").value.trim();
+  if(!jenis && !detail){ toast("Isi jenis pesanan atau detailnya dulu"); $("#c_jenis").focus(); return; }
+  let msg = "Halo Warung Cak Moer! Saya mau pesan katering/khusus:\n\n";
+  if(nama)   msg += `*Nama:* ${nama}\n`;
+  if(jenis)  msg += `*Jenis:* ${jenis}\n`;
+  if(porsi)  msg += `*Jumlah:* ${porsi}\n`;
+  if(tgl)    msg += `*Tanggal:* ${tgl}\n`;
+  if(detail) msg += `\n*Detail:* ${detail}\n`;
+  msg += "\nMohon info ketersediaan & harganya ya. Terima kasih 🙏";
+  window.open(`https://wa.me/${CONFIG.waNumber}?text=${encodeURIComponent(msg)}`, "_blank");
+}
 
 // Tahun hak cipta otomatis
 (function(){ const y = document.getElementById("year"); if(y) y.textContent = new Date().getFullYear(); })();
@@ -1052,8 +1139,9 @@ async function saveAdmin(){
     document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
     c.classList.add("active"); curCat = c.dataset.cat; renderMenu();
   });
-  document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeCart(); closeAdmin(); toggleBrand(false); } });
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeCart(); closeAdmin(); closeCater(); toggleBrand(false); } });
   if(location.hash === "#admin") openAdmin();
+  if(location.hash === "#katering") openCater();
 
   // Menu cepat dari logo
   $("#logoBtn").addEventListener('click', e=>{ e.stopPropagation(); toggleBrand(); });
