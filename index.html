@@ -520,8 +520,9 @@ footer a:hover{color:var(--gold)}
     </div>
     <div>
       <h4>Kontak</h4>
-      <div class="foot-row"><i class="ti ti-map-pin"></i><span>Jl. Jambu No.73, Wonorejo Pir IV</span></div>
+      <div class="foot-row"><i class="ti ti-map-pin"></i><a id="footMaps" href="#" target="_blank" rel="noopener">Jl. Jambu No.73, Wonorejo Pir IV</a></div>
       <div class="foot-row"><i class="ti ti-phone"></i><a id="footPhone" href="#">081240915134</a></div>
+      <div class="foot-row"><i class="ti ti-phone"></i><a href="tel:+6282198390250">082198390250</a></div>
       <div class="foot-row"><i class="ti ti-mail"></i><a href="mailto:dianindriastuti@gmail.com">dianindriastuti@gmail.com</a></div>
       <div class="foot-row"><i class="ti ti-mail"></i><a href="mailto:bintangwahyu212@gmail.com">bintangwahyu212@gmail.com</a></div>
     </div>
@@ -993,6 +994,7 @@ $("#themeBtn").onclick = ()=>{
   const waUrl = `https://wa.me/${CONFIG.waNumber}`;
   $("#waFooter").href = waUrl;
   $("#footPhone").href = "tel:+" + CONFIG.waNumber;
+  $("#footMaps").href = CONFIG.mapsUrl || ("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(CONFIG.address));
 })();
 
 /* Menu cepat dari logo "CM" */
