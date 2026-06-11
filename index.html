@@ -445,7 +445,7 @@ footer a:hover{color:var(--gold)}
     <div class="about-card">
       <div class="about-stats">
         <div class="stat"><div class="n">15+</div><div class="l">Tahun melayani</div></div>
-        <div class="stat"><div class="n">14</div><div class="l">Menu pilihan</div></div>
+        <div class="stat"><div class="n" id="statCount">14</div><div class="l">Menu pilihan</div></div>
         <div class="stat"><div class="n">100%</div><div class="l">Bahan segar</div></div>
         <div class="stat"><div class="n">Ramah</div><div class="l">Harga bersahabat</div></div>
       </div>
@@ -841,6 +841,8 @@ function load(){ try{ cart = JSON.parse(localStorage.getItem("cm_cart")) || {}; 
 /* =========================================================
    RENDER MENU
    ========================================================= */
+function updateStats(){ const e = document.getElementById('statCount'); if(e) e.textContent = MENU.length; }
+
 function renderMenu(){
   const grid = $("#menuGrid");
   const list = MENU.filter(m =>
@@ -1060,7 +1062,7 @@ async function loadMenu(){
     const j = await r.json();
     if(j && Array.isArray(j.menu) && j.menu.length){
       MENU = j.menu.map(x => ({ soldOut:false, ...x }));
-      renderMenu(); renderCart();
+      renderMenu(); renderCart(); updateStats();
     }
   }catch(e){ /* gagal -> tetap pakai DEFAULT_MENU */ }
 }
@@ -1182,7 +1184,7 @@ async function saveAdmin(){
     if(resp.status===401){ adminKey=null; showAdminView('login'); $("#adm_login_msg").textContent="Password salah, coba lagi."; adminMsg(""); return; }
     if(!resp.ok){ const e = await resp.json().catch(()=>({})); adminMsg(e.error || "Gagal menyimpan."); return; }
     MENU = draft.map(x=>({...x}));
-    renderMenu(); renderCart();
+    renderMenu(); renderCart(); updateStats();
     adminMsg("Tersimpan & dipublikasikan ✔");
     setTimeout(closeAdmin, 900);
   }catch(e){ adminMsg("Gagal menyimpan: " + e.message); }
@@ -1223,7 +1225,7 @@ function setupReveals(){
   try{ saved = localStorage.getItem("cm_theme") || "dark"; }catch(e){}
   setTheme(saved);
 
-  load(); updateBadges(); renderMenu();
+  load(); updateBadges(); renderMenu(); updateStats();
   loadMenu();   // ambil menu terbaru dari server (jika ada)
   setupReveals();
 
