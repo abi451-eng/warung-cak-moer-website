@@ -356,8 +356,32 @@ footer a:hover{color:var(--gold)}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) var(--d,0s),transform .7s cubic-bezier(.2,.7,.2,1) var(--d,0s)}
 .reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion: reduce){
-  .reveal,.card{opacity:1 !important;transform:none !important;transition:none !important}
+  .reveal,.card,.testi-card{opacity:1 !important;transform:none !important;transition:none !important}
 }
+
+/* ===== Testimoni ===== */
+.testi-sec{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.testi-grid{display:grid;gap:20px;grid-template-columns:1fr}
+@media(min-width:680px){.testi-grid{grid-template-columns:repeat(3,1fr)}}
+.testi-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px 24px;
+  display:flex;flex-direction:column;gap:14px;opacity:0;transform:translateY(22px);
+  transition:opacity .6s cubic-bezier(.2,.7,.2,1) var(--d,0s),transform .6s cubic-bezier(.2,.7,.2,1) var(--d,0s),border-color .3s,box-shadow .3s}
+.testi-card.in{opacity:1;transform:none}
+.testi-card:hover{border-color:var(--line-gold);box-shadow:0 22px 46px -28px rgba(0,0,0,.5)}
+.testi-stars{font-size:15px;letter-spacing:3px;line-height:1}
+.testi-stars .st-on{color:var(--gold)}
+.testi-stars .st-off{color:var(--line-gold);opacity:.5}
+.testi-text{font-family:var(--serif);font-style:italic;font-size:16.5px;line-height:1.6;color:var(--text);flex:1}
+.testi-by{display:flex;align-items:center;gap:12px;margin-top:2px}
+.testi-ava{width:44px;height:44px;border-radius:50%;background:var(--emerald);color:var(--gold);display:grid;place-items:center;
+  font-family:var(--serif);font-size:19px;font-weight:500;border:1px solid var(--line-gold);flex:none}
+.testi-name{font-weight:600;font-size:14px;color:var(--text)}
+.testi-role{font-size:12px;color:var(--text-soft)}
+.testi-empty{grid-column:1/-1;text-align:center;color:var(--text-soft);padding:30px 0;font-style:italic}
+/* bintang input rating di admin */
+.rate-pick{display:flex;gap:6px}
+.rate-pick button{background:none;border:none;cursor:pointer;font-size:24px;color:var(--line-gold);padding:0;line-height:1}
+.rate-pick button.on{color:var(--gold)}
 
 </style>
 
@@ -401,6 +425,7 @@ footer a:hover{color:var(--gold)}
         <a class="bm-item" role="menuitem" id="bmWa" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i> Hubungi kami</a>
         <div class="bm-div"></div>
         <button class="bm-item bm-admin" role="menuitem" onclick="bmAdmin()"><i class="ti ti-settings"></i> Kelola menu</button>
+        <button class="bm-item bm-admin" role="menuitem" onclick="bmTesti()"><i class="ti ti-quote"></i> Kelola testimoni</button>
       </div>
     </div>
     <nav class="nav-links">
@@ -512,6 +537,17 @@ footer a:hover{color:var(--gold)}
   </div>
 </section>
 
+<!-- ====== TESTIMONI ====== -->
+<section id="testi" class="testi-sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Testimoni</span>
+      <h2>Apa kata mereka</h2>
+    </div>
+    <div class="testi-grid" id="testiGrid"></div>
+  </div>
+</section>
+
 <!-- ====== FOOTER ====== -->
 <footer id="kontak">
   <div class="wrap foot-grid">
@@ -614,6 +650,59 @@ footer a:hover{color:var(--gold)}
   <div class="admin-foot" id="admFoot" style="display:none">
     <div class="save-state" id="adm_state"></div>
     <button class="btn btn-block" onclick="saveAdmin()"><i class="ti ti-cloud-upload"></i> Simpan &amp; Publikasikan</button>
+  </div>
+</section>
+
+<!-- ====== KELOLA TESTIMONI (admin) ====== -->
+<div class="admin-mask" id="testiMask" onclick="closeTestiAdmin()"></div>
+<section class="admin" id="testiAdmin" aria-label="Kelola testimoni">
+  <div class="admin-top">
+    <h3><i class="ti ti-quote"></i> Kelola Testimoni</h3>
+    <button class="icon-btn" onclick="closeTestiAdmin()" aria-label="Tutup"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="admin-scroll">
+    <!-- Login -->
+    <div class="admin-in" id="tLogin">
+      <div class="admin-login">
+        <i class="ti ti-lock"></i>
+        <h3 style="margin:10px 0 4px">Masuk sebagai pengelola</h3>
+        <p style="color:var(--text-soft);font-size:14px;margin-bottom:16px">Masukkan password admin untuk mengelola testimoni.</p>
+        <div class="field"><input id="t_pass" type="password" placeholder="Password admin" onkeydown="if(event.key==='Enter')testiLogin()"></div>
+        <button class="btn btn-block" onclick="testiLogin()">Masuk</button>
+        <div class="save-state" id="t_login_msg"></div>
+      </div>
+    </div>
+    <!-- Editor -->
+    <div class="admin-in" id="tEditor" style="display:none">
+      <div class="adm-form">
+        <h4 id="t_form_title" style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px">Tambah testimoni</h4>
+        <div class="row two">
+          <div class="field"><label>Nama</label><input id="t_nama" placeholder="Contoh: Andi"></div>
+          <div class="field"><label>Keterangan (opsional)</label><input id="t_peran" placeholder="mis. Pelanggan / Warga Arso"></div>
+        </div>
+        <div class="field"><label>Rating</label>
+          <div class="rate-pick" id="t_rate">
+            <button type="button" onclick="setTRate(1)">&#9733;</button>
+            <button type="button" onclick="setTRate(2)">&#9733;</button>
+            <button type="button" onclick="setTRate(3)">&#9733;</button>
+            <button type="button" onclick="setTRate(4)">&#9733;</button>
+            <button type="button" onclick="setTRate(5)">&#9733;</button>
+          </div>
+          <input type="hidden" id="t_rating" value="5">
+        </div>
+        <div class="field"><label>Testimoni</label><textarea id="t_teks" placeholder="Tulis testimoni pelanggan…"></textarea></div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-block" onclick="submitTesti()"><i class="ti ti-check"></i> Simpan testimoni</button>
+          <button class="btn" style="border:1px solid var(--line);color:var(--text);background:var(--surface)" onclick="clearTestiForm()">Reset</button>
+        </div>
+      </div>
+      <h4 style="font-family:'Fraunces',serif;font-size:17px;margin:6px 2px 10px">Daftar testimoni</h4>
+      <div id="tList"></div>
+    </div>
+  </div>
+  <div class="admin-foot" id="tFoot" style="display:none">
+    <div class="save-state" id="t_state"></div>
+    <button class="btn btn-block" onclick="saveTesti()"><i class="ti ti-cloud-upload"></i> Simpan &amp; Publikasikan</button>
   </div>
 </section>
 
@@ -1199,6 +1288,140 @@ async function saveAdmin(){
 }
 
 /* =========================================================
+   TESTIMONI
+   ========================================================= */
+const DEFAULT_TESTI = [
+  { id:1, nama:'Andi Pratama', peran:'Pelanggan setia', rating:5, teks:'Baksonya mantap, kuahnya gurih dan porsinya pas. Sudah langganan dari dulu!' },
+  { id:2, nama:'Siti Rahma',   peran:'Warga Arso',       rating:5, teks:'Nasi gorengnya juara, bumbunya berasa rumahan. Pelayanannya ramah banget.' },
+  { id:3, nama:'Budi Santoso', peran:'Pelanggan',        rating:5, teks:'Tempatnya nyaman, harga bersahabat. Es jeruknya segar, cocok buat siang hari.' }
+];
+let TESTI = DEFAULT_TESTI.map(x=>({...x}));
+let tDraft = [], tEditingId = null;
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function stars(r){ r=Math.max(0,Math.min(5,parseInt(r,10)||0)); return '<span class="st-on">'+'\u2605'.repeat(r)+'</span><span class="st-off">'+'\u2605'.repeat(5-r)+'</span>'; }
+function initial(n){ n=(n||'').trim(); return n ? n[0].toUpperCase() : '?'; }
+
+function renderTesti(){
+  const sec = document.getElementById('testi');
+  const grid = document.getElementById('testiGrid');
+  if(!grid) return;
+  if(!TESTI.length){ if(sec) sec.style.display='none'; grid.innerHTML=''; return; }
+  if(sec) sec.style.display='';
+  grid.innerHTML = TESTI.map((t,i)=>`
+    <article class="testi-card" style="--d:${Math.min(i,8)*0.08}s">
+      <div class="testi-stars">${stars(t.rating)}</div>
+      <p class="testi-text">"${esc(t.teks)}"</p>
+      <div class="testi-by">
+        <div class="testi-ava">${esc(initial(t.nama))}</div>
+        <div>
+          <div class="testi-name">${esc(t.nama)}</div>
+          ${t.peran ? `<div class="testi-role">${esc(t.peran)}</div>` : ''}
+        </div>
+      </div>
+    </article>`).join("");
+  if(revObserver){ observeReveal(sec); }
+  else { grid.querySelectorAll('.testi-card').forEach(el=>el.classList.add('in')); }
+}
+
+async function loadTesti(){
+  try{
+    const r = await fetch('/api/testi', { cache:'no-store' });
+    if(!r.ok) return;
+    const j = await r.json();
+    if(j && Array.isArray(j.testi)){ TESTI = j.testi.map(x=>({...x})); renderTesti(); }
+  }catch(e){ /* gagal -> tetap pakai DEFAULT_TESTI */ }
+}
+
+/* --- Panel kelola testimoni (mirror admin menu, berbagi adminKey) --- */
+function bmTesti(){ toggleBrand(false); openTestiAdmin(); }
+function openTestiAdmin(){
+  $("#testiMask").classList.add("open"); $("#testiAdmin").classList.add("open"); document.body.style.overflow="hidden";
+  if(adminKey){ tDraft = TESTI.map(x=>({...x})); showTestiView('editor'); renderTestiList(); clearTestiForm(); }
+  else { showTestiView('login'); $("#t_login_msg").textContent=""; }
+}
+function closeTestiAdmin(){ $("#testiMask").classList.remove("open"); $("#testiAdmin").classList.remove("open"); document.body.style.overflow=""; }
+function showTestiView(v){
+  $("#tLogin").style.display  = v==='login'  ? 'block':'none';
+  $("#tEditor").style.display = v==='editor' ? 'block':'none';
+  $("#tFoot").style.display   = v==='editor' ? 'flex':'none';
+}
+function testiMsg(t){ $("#t_state").textContent = t||""; }
+function testiLogin(){
+  const v = $("#t_pass").value;
+  if(!v){ $("#t_login_msg").textContent="Masukkan password."; return; }
+  adminKey = v;
+  tDraft = TESTI.map(x=>({...x}));
+  showTestiView('editor'); renderTestiList(); clearTestiForm();
+}
+function setTRate(n){
+  $("#t_rating").value = n;
+  document.querySelectorAll('#t_rate button').forEach((b,i)=> b.classList.toggle('on', i < n));
+}
+function clearTestiForm(){
+  tEditingId = null;
+  $("#t_nama").value=""; $("#t_peran").value=""; $("#t_teks").value="";
+  setTRate(5);
+  $("#t_form_title").textContent = "Tambah testimoni";
+}
+function renderTestiList(){
+  $("#tList").innerHTML = tDraft.map(t=>`
+    <div class="adm-item">
+      <div class="adm-info">
+        <h4>${esc(t.nama)} <span style="color:var(--gold);font-size:13px">${stars(t.rating)}</span></h4>
+        <div class="p">${esc((t.teks||'').slice(0,70))}${(t.teks||'').length>70?'…':''}</div>
+      </div>
+      <div class="adm-actions">
+        <button class="mini" title="Edit" onclick="testiEdit(${t.id})"><i class="ti ti-pencil"></i></button>
+        <button class="mini danger" title="Hapus" onclick="testiDelete(${t.id})"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`).join("") || '<div class="save-state">Belum ada testimoni.</div>';
+}
+function submitTesti(){
+  const nama=$("#t_nama").value.trim(), teks=$("#t_teks").value.trim();
+  const peran=$("#t_peran").value.trim(), rating=parseInt($("#t_rating").value,10)||5;
+  if(!nama || !teks){ testiMsg("Nama dan teks testimoni wajib diisi."); return; }
+  if(tEditingId){ const t=tDraft.find(x=>x.id===tEditingId); if(t){ t.nama=nama; t.teks=teks; t.peran=peran; t.rating=rating; } }
+  else { tDraft.push({ id:Date.now(), nama, teks, peran, rating }); }
+  renderTestiList(); clearTestiForm(); testiMsg("Tersimpan sementara — klik Simpan & Publikasikan.");
+}
+function testiEdit(id){
+  const t = tDraft.find(x=>x.id===id); if(!t) return;
+  tEditingId = id;
+  $("#t_nama").value=t.nama; $("#t_peran").value=t.peran||""; $("#t_teks").value=t.teks||"";
+  setTRate(t.rating||5);
+  $("#t_form_title").textContent = "Edit testimoni";
+  const sc = document.querySelector('#testiAdmin .admin-scroll');
+  if(sc && sc.scrollTo) sc.scrollTo({ top:0, behavior:'smooth' });
+  const form = document.querySelector('#testiAdmin .adm-form');
+  if(form){ form.classList.add('flash'); setTimeout(()=>form.classList.remove('flash'),1200); }
+  setTimeout(()=>{ const n=$("#t_nama"); if(n) n.focus({preventScroll:true}); },350);
+}
+function testiDelete(id){
+  const t = tDraft.find(x=>x.id===id); if(!t) return;
+  if(!confirm(`Hapus testimoni dari "${t.nama}"?`)) return;
+  tDraft = tDraft.filter(x=>x.id!==id);
+  if(tEditingId===id) clearTestiForm();
+  renderTestiList(); testiMsg("Dihapus (klik Simpan untuk publikasikan).");
+}
+async function saveTesti(){
+  testiMsg("Menyimpan…");
+  try{
+    const resp = await fetch('/api/testi', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'x-admin-key': adminKey },
+      body: JSON.stringify({ testi: tDraft })
+    });
+    if(resp.status===401){ adminKey=null; showTestiView('login'); $("#t_login_msg").textContent="Password salah, coba lagi."; testiMsg(""); return; }
+    if(!resp.ok){ const e=await resp.json().catch(()=>({})); testiMsg(e.error||"Gagal menyimpan."); return; }
+    TESTI = tDraft.map(x=>({...x}));
+    renderTesti();
+    testiMsg("Tersimpan & dipublikasikan ✔");
+    setTimeout(closeTestiAdmin, 900);
+  }catch(e){ testiMsg("Gagal menyimpan: "+e.message); }
+}
+
+/* =========================================================
    ANIMASI REVEAL SAAT SCROLL (nuansa premium)
    ========================================================= */
 const revObserver = ('IntersectionObserver' in window)
@@ -1209,7 +1432,7 @@ const revObserver = ('IntersectionObserver' in window)
 
 function observeReveal(scope){
   if(!revObserver) return;
-  (scope || document).querySelectorAll('.reveal:not(.in)').forEach(el => revObserver.observe(el));
+  (scope || document).querySelectorAll('.reveal:not(.in), .testi-card:not(.in)').forEach(el => revObserver.observe(el));
 }
 
 function setupReveals(){
@@ -1220,7 +1443,7 @@ function setupReveals(){
     document.querySelectorAll('.foot-grid > div')
   ].forEach(g => g.forEach((el,i)=>{ el.classList.add('reveal'); el.style.setProperty('--d', (i*0.09)+'s'); }));
   // elemen tunggal
-  ['.about .sec-head','.about p','.about-card','#menu .sec-head','.menu-intro','.menu-cta']
+  ['.about .sec-head','.about p','.about-card','#menu .sec-head','.menu-intro','.menu-cta','#testi .sec-head']
     .forEach(sel => document.querySelectorAll(sel).forEach(el => el.classList.add('reveal')));
   observeReveal(document);
 }
@@ -1235,7 +1458,9 @@ function setupReveals(){
 
   load(); updateBadges(); renderMenu(); updateStats();
   loadMenu();   // ambil menu terbaru dari server (jika ada)
+  renderTesti();
   setupReveals();
+  loadTesti();  // ambil testimoni terbaru dari server (jika ada)
 
   $("#searchInput").addEventListener("input", e=>{ curSearch = e.target.value; renderMenu(); });
   $("#chips").addEventListener("click", e=>{
@@ -1243,7 +1468,7 @@ function setupReveals(){
     document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
     c.classList.add("active"); curCat = c.dataset.cat; renderMenu();
   });
-  document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeCart(); closeAdmin(); closeCater(); closeMenuPanel(); toggleBrand(false); } });
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeCart(); closeAdmin(); closeTestiAdmin(); closeCater(); closeMenuPanel(); toggleBrand(false); } });
   if(location.hash === "#admin") openAdmin();
   if(location.hash === "#katering") openCater();
 
