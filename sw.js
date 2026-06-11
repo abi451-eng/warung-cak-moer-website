@@ -2,7 +2,7 @@
    PENTING: setiap kali kamu mengubah index.html / file situs,
    naikkan nomor versi di bawah (mis. v1 -> v2) supaya pelanggan
    mendapat versi terbaru, bukan versi lama yang ter-cache. */
-const CACHE_VERSION = 'cakmoer-v5';
+const CACHE_VERSION = 'cakmoer-v6';
 const SHELL = [
   './',
   './index.html',
