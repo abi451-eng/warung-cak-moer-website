@@ -281,7 +281,8 @@ footer a:hover{color:var(--gold)}
 .admin-login{max-width:340px;margin:44px auto;text-align:center}
 .admin-login>.ti{font-size:42px;color:var(--gold)}
 .admin input[type=file]{font-size:14px;color:var(--text-soft)}
-.adm-form{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:20px}
+.adm-form{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:20px;transition:border-color .3s,box-shadow .3s}
+.adm-form.flash{border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,162,74,.25)}
 .adm-form .row,.cater .row.two{display:grid;gap:12px}
 @media(min-width:520px){.adm-form .row.two,.cater .row.two{grid-template-columns:1fr 1fr}}
 .adm-item{display:flex;gap:13px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:var(--radius);margin-bottom:11px;background:var(--surface)}
@@ -1124,7 +1125,12 @@ function editItem(id){
   $("#a_nama").value = m.nama; $("#a_harga").value = m.harga;
   $("#a_cat").value = m.cat; $("#a_desc").value = m.desc || ""; $("#a_foto").value = "";
   $("#adm_form_title").textContent = "Edit menu";
-  $("#admin").scrollTo({ top:0, behavior:'smooth' });
+  // arahkan ke form edit tanpa perlu scroll manual
+  const sc = document.querySelector('#admin .admin-scroll');
+  if(sc && sc.scrollTo) sc.scrollTo({ top:0, behavior:'smooth' });
+  const form = document.querySelector('#admin .adm-form');
+  if(form){ form.classList.add('flash'); setTimeout(()=> form.classList.remove('flash'), 1200); }
+  setTimeout(()=>{ const n = $("#a_nama"); if(n) n.focus({ preventScroll:true }); }, 350);
 }
 function toggleSold(id){ const m = draft.find(x=>x.id===id); if(m){ m.soldOut = !m.soldOut; renderAdminList(); } }
 function deleteItem(id){
