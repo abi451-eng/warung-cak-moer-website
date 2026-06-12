@@ -264,6 +264,17 @@ footer a:hover{color:var(--gold)}
 .seg-btn i{font-size:18px}
 .seg-btn:hover{border-color:var(--gold);color:var(--gold)}
 .seg-btn.active{border-color:var(--gold);color:var(--on-gold);background:var(--gold)}
+.zona-opts{display:flex;flex-direction:column;gap:8px}
+.zona-opt{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;
+  padding:13px 14px;border:1px solid var(--line);background:var(--bg);border-radius:var(--radius-sm);cursor:pointer;
+  font-family:var(--sans);color:var(--text);transition:.18s}
+.zona-opt:hover{border-color:var(--gold)}
+.zona-opt.active{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.zo-t{display:block;font-size:13.5px;font-weight:600}
+.zo-s{display:block;font-size:11.5px;color:var(--text-soft);margin-top:1px}
+.zo-p{font-family:var(--serif);font-size:15px;color:var(--gold);white-space:nowrap;flex:none}
+.sub-row{display:flex;justify-content:space-between;font-size:13px;color:var(--text-soft);margin:3px 0}
+.sub-row span:last-child{color:var(--text)}
 
 /* ===== TOAST ===== */
 .toast{position:fixed;left:50%;bottom:94px;transform:translate(-50%,20px);z-index:99;background:var(--emerald);
@@ -607,9 +618,24 @@ footer a:hover{color:var(--gold)}
         <button type="button" class="seg-btn" data-m="antar" onclick="setMetode('antar')"><i class="ti ti-moped"></i> Diantar</button>
       </div>
     </div>
+    <div class="field" id="zonaField" style="display:none">
+      <label>Wilayah pengantaran</label>
+      <div class="zona-opts" id="zonaSeg">
+        <button type="button" class="zona-opt active" data-z="dalam" onclick="setZona('dalam')">
+          <span><span class="zo-t">Dalam Kampung Wonorejo (Pir IV)</span><span class="zo-s">Sekitaran dalam kampung</span></span>
+          <span class="zo-p">Gratis</span>
+        </button>
+        <button type="button" class="zona-opt" data-z="luar" onclick="setZona('luar')">
+          <span><span class="zo-t">Luar kampung / kampung sebelah</span><span class="zo-s">Ongkir sesuai jarak</span></span>
+          <span class="zo-p">mulai 15rb</span>
+        </button>
+      </div>
+    </div>
     <div class="field" id="addrField" style="display:none"><label>Alamat pengantaran</label><textarea id="custAddr" placeholder="Alamat lengkap untuk diantar (patokan/RT-RW bila ada)"></textarea></div>
     <div class="field"><label>Catatan (opsional)</label><textarea id="custNote" placeholder="Contoh: nasi goreng pedas, tanpa sayur"></textarea></div>
-    <div class="total-row"><span class="t-l">Total pesanan</span><span class="t-v" id="totalView">Rp 0</span></div>
+    <div class="sub-row" id="subtotalRow" style="display:none"><span>Subtotal</span><span id="subtotalView">Rp 0</span></div>
+    <div class="sub-row" id="ongkirRow" style="display:none"><span>Ongkir</span><span id="ongkirView">Gratis</span></div>
+    <div class="total-row"><span class="t-l">Total</span><span class="t-v" id="totalView">Rp 0</span></div>
     <button class="btn btn-wa" id="waBtn" onclick="checkout()"><i class="ti ti-brand-whatsapp"></i> Pesan via WhatsApp</button>
   </div>
 </aside>
@@ -1036,17 +1062,40 @@ function renderCart(){
     </div>`;
   }).join("");
   box.style.display = "block";
-  $("#totalView").textContent = rupiah(cartTotal());
+  updateCheckoutTotals();
 }
 
 /* =========================================================
    CHECKOUT -> WHATSAPP
    ========================================================= */
 let metode = 'ambil';
+let zona = 'dalam';
+const ONGKIR_LUAR = 15000;
+
+function ongkirNow(){ return (metode === 'antar' && zona === 'luar') ? ONGKIR_LUAR : 0; }
+
+function updateCheckoutTotals(){
+  const sub = cartTotal();
+  const antar = (metode === 'antar');
+  const ongkir = ongkirNow();
+  if($("#subtotalRow")) $("#subtotalRow").style.display = antar ? 'flex' : 'none';
+  if($("#ongkirRow"))   $("#ongkirRow").style.display   = antar ? 'flex' : 'none';
+  if($("#subtotalView")) $("#subtotalView").textContent = rupiah(sub);
+  if(antar && $("#ongkirView")) $("#ongkirView").textContent = (zona === 'luar') ? (rupiah(ONGKIR_LUAR) + ' (mulai)') : 'Gratis';
+  $("#totalView").textContent = rupiah(sub + ongkir);
+}
+
 function setMetode(m){
   metode = m;
   document.querySelectorAll('#metodeSeg .seg-btn').forEach(b => b.classList.toggle('active', b.dataset.m === m));
   const af = $("#addrField"); if(af) af.style.display = (m === 'antar') ? 'block' : 'none';
+  const zf = $("#zonaField"); if(zf) zf.style.display = (m === 'antar') ? 'block' : 'none';
+  updateCheckoutTotals();
+}
+function setZona(z){
+  zona = z;
+  document.querySelectorAll('#zonaSeg .zona-opt').forEach(b => b.classList.toggle('active', b.dataset.z === z));
+  updateCheckoutTotals();
 }
 
 function checkout(){
@@ -1058,16 +1107,30 @@ function checkout(){
   if(!telp){ toast("Isi nomor WhatsApp"); $("#custPhone").focus(); return; }
   if(metode === 'antar' && !addr){ toast("Isi alamat pengantaran"); $("#custAddr").focus(); return; }
 
-  const metodeLabel = metode === 'antar' ? 'Diantar 🛵' : 'Ambil sendiri 🏃';
+  const antar = (metode === 'antar');
+  const ongkir = ongkirNow();
+  const sub = cartTotal();
+  const total = sub + ongkir;
+  const metodeLabel = antar ? 'Diantar 🛵' : 'Ambil sendiri 🏃';
+  const zonaLabel = (zona === 'luar') ? 'Luar kampung / kampung sebelah' : 'Dalam Kampung Wonorejo (Pir IV)';
+
   let msg = "Halo Warung Cak Moer! Saya mau pesan:\n\n";
   msg += `*Nama:* ${nama}\n*No. WA:* ${telp}\n*Metode:* ${metodeLabel}\n`;
-  if(metode === 'antar') msg += `*Alamat:* ${addr}\n`;
+  if(antar){
+    msg += `*Wilayah:* ${zonaLabel}\n*Alamat:* ${addr}\n`;
+  }
   msg += `\n*Pesanan:*\n`;
   Object.entries(cart).forEach(([id,q],i)=>{
     const m = MENU.find(x=>x.id==id);
     msg += `${i+1}. ${m.nama} x${q} — ${rupiah(m.harga*q)}\n`;
   });
-  msg += `\n*Total: ${rupiah(cartTotal())}*`;
+  if(antar){
+    msg += `\n*Subtotal:* ${rupiah(sub)}`;
+    msg += `\n*Ongkir:* ${ongkir ? (rupiah(ongkir) + ' (mulai, sesuai jarak)') : 'Gratis'}`;
+    msg += `\n*Total:* ${rupiah(total)}`;
+  } else {
+    msg += `\n*Total: ${rupiah(total)}*`;
+  }
   if(note) msg += `\n\n*Catatan:* ${note}`;
   msg += "\n\nTerima kasih 🙏";
 
