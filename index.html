@@ -224,12 +224,14 @@ footer a:hover{color:var(--gold)}
 /* ===== KERANJANG ===== */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:96;opacity:0;visibility:hidden;transition:.3s}
 .overlay.open{opacity:1;visibility:visible}
-.drawer{position:fixed;top:0;right:0;height:100%;width:min(430px,100%);background:var(--bg);z-index:97;
+.drawer{position:fixed;top:0;right:0;height:100%;height:100dvh;width:min(430px,100%);background:var(--bg);z-index:97;
   display:flex;flex-direction:column;transform:translateX(100%);transition:transform .38s cubic-bezier(.4,0,.2,1);border-left:1px solid var(--line-gold)}
 .drawer.open{transform:none}
 .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:20px 20px;border-bottom:1px solid var(--line)}
 .drawer-head h3{font-family:var(--serif);font-size:22px;font-weight:500}
-.drawer-body{flex:1;overflow-y:auto;padding:8px 20px}
+.drawer-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.drawer-body{padding:8px 20px}
+.checkout-fields{padding:8px 20px 16px;border-top:1px solid var(--line)}
 .ci{display:flex;gap:14px;padding:15px 0;border-bottom:1px solid var(--line)}
 .ci-i{width:60px;height:60px;border-radius:var(--radius-sm);overflow:hidden;background:var(--surface-2);flex:none;display:grid;place-items:center;color:var(--gold)}
 .ci-info{flex:1;min-width:0}
@@ -243,7 +245,7 @@ footer a:hover{color:var(--gold)}
 .qty span{font-weight:600;min-width:18px;text-align:center}
 .cart-empty{text-align:center;color:var(--text-soft);padding:64px 20px;font-style:italic}
 .cart-empty i{font-size:44px;opacity:.4;display:block;margin-bottom:14px;color:var(--gold)}
-.drawer-foot{padding:20px;border-top:1px solid var(--line);background:var(--surface)}
+.drawer-foot{padding:14px 20px;padding-bottom:calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--surface)}
 .field{margin-bottom:13px}
 .field label{display:block;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px;color:var(--text-soft)}
 .field input,.field textarea,.admin select{width:100%;padding:13px 15px;border-radius:var(--radius-sm);border:1px solid var(--line);
@@ -607,32 +609,36 @@ footer a:hover{color:var(--gold)}
     <h3>Keranjang</h3>
     <button class="icon-btn" onclick="closeCart()" aria-label="Tutup"><i class="ti ti-x"></i></button>
   </div>
-  <div class="drawer-body" id="cartBody"></div>
-  <div class="drawer-foot" id="checkoutBox" style="display:none">
-    <div class="field"><label>Nama lengkap</label><input id="custName" placeholder="Nama kamu" /></div>
-    <div class="field"><label>Nomor WhatsApp</label><input id="custPhone" inputmode="numeric" placeholder="08xxxxxxxxxx" /></div>
-    <div class="field">
-      <label>Metode</label>
-      <div class="seg" id="metodeSeg">
-        <button type="button" class="seg-btn active" data-m="ambil" onclick="setMetode('ambil')"><i class="ti ti-walk"></i> Ambil sendiri</button>
-        <button type="button" class="seg-btn" data-m="antar" onclick="setMetode('antar')"><i class="ti ti-moped"></i> Diantar</button>
+  <div class="drawer-scroll">
+    <div class="drawer-body" id="cartBody"></div>
+    <div class="checkout-fields" id="checkoutFields" style="display:none">
+      <div class="field"><label>Nama lengkap</label><input id="custName" placeholder="Nama kamu" /></div>
+      <div class="field"><label>Nomor WhatsApp</label><input id="custPhone" inputmode="numeric" placeholder="08xxxxxxxxxx" /></div>
+      <div class="field">
+        <label>Metode</label>
+        <div class="seg" id="metodeSeg">
+          <button type="button" class="seg-btn active" data-m="ambil" onclick="setMetode('ambil')"><i class="ti ti-walk"></i> Ambil sendiri</button>
+          <button type="button" class="seg-btn" data-m="antar" onclick="setMetode('antar')"><i class="ti ti-moped"></i> Diantar</button>
+        </div>
       </div>
-    </div>
-    <div class="field" id="zonaField" style="display:none">
-      <label>Wilayah pengantaran</label>
-      <div class="zona-opts" id="zonaSeg">
-        <button type="button" class="zona-opt active" data-z="dalam" onclick="setZona('dalam')">
-          <span><span class="zo-t">Dalam Kampung Wonorejo (Pir IV)</span><span class="zo-s">Sekitaran dalam kampung</span></span>
-          <span class="zo-p">Gratis</span>
-        </button>
-        <button type="button" class="zona-opt" data-z="luar" onclick="setZona('luar')">
-          <span><span class="zo-t">Luar kampung / kampung sebelah</span><span class="zo-s">Ongkir sesuai jarak</span></span>
-          <span class="zo-p">mulai 15rb</span>
-        </button>
+      <div class="field" id="zonaField" style="display:none">
+        <label>Wilayah pengantaran</label>
+        <div class="zona-opts" id="zonaSeg">
+          <button type="button" class="zona-opt active" data-z="dalam" onclick="setZona('dalam')">
+            <span><span class="zo-t">Dalam Kampung Wonorejo (Pir IV)</span><span class="zo-s">Sekitaran dalam kampung</span></span>
+            <span class="zo-p">Gratis</span>
+          </button>
+          <button type="button" class="zona-opt" data-z="luar" onclick="setZona('luar')">
+            <span><span class="zo-t">Luar kampung / kampung sebelah</span><span class="zo-s">Ongkir sesuai jarak</span></span>
+            <span class="zo-p">mulai 15rb</span>
+          </button>
+        </div>
       </div>
+      <div class="field" id="addrField" style="display:none"><label>Alamat pengantaran</label><textarea id="custAddr" placeholder="Alamat lengkap untuk diantar (patokan/RT-RW bila ada)"></textarea></div>
+      <div class="field"><label>Catatan (opsional)</label><textarea id="custNote" placeholder="Contoh: nasi goreng pedas, tanpa sayur"></textarea></div>
     </div>
-    <div class="field" id="addrField" style="display:none"><label>Alamat pengantaran</label><textarea id="custAddr" placeholder="Alamat lengkap untuk diantar (patokan/RT-RW bila ada)"></textarea></div>
-    <div class="field"><label>Catatan (opsional)</label><textarea id="custNote" placeholder="Contoh: nasi goreng pedas, tanpa sayur"></textarea></div>
+  </div>
+  <div class="drawer-foot" id="checkoutFoot" style="display:none">
     <div class="sub-row" id="subtotalRow" style="display:none"><span>Subtotal</span><span id="subtotalView">Rp 0</span></div>
     <div class="sub-row" id="ongkirRow" style="display:none"><span>Ongkir</span><span id="ongkirView">Gratis</span></div>
     <div class="total-row"><span class="t-l">Total</span><span class="t-v" id="totalView">Rp 0</span></div>
@@ -1039,11 +1045,11 @@ function updateBadges(){
 }
 
 function renderCart(){
-  const body = $("#cartBody"), box = $("#checkoutBox");
+  const body = $("#cartBody"), fields = $("#checkoutFields"), foot = $("#checkoutFoot");
   const ids = Object.keys(cart);
   if(!ids.length){
     body.innerHTML = `<div class="cart-empty"><i class="ti ti-shopping-cart-off"></i>Keranjang masih kosong.<br>Yuk pilih menu favoritmu!</div>`;
-    box.style.display = "none";
+    fields.style.display = "none"; foot.style.display = "none";
     return;
   }
   body.innerHTML = ids.map(id=>{
@@ -1061,7 +1067,7 @@ function renderCart(){
       </div>
     </div>`;
   }).join("");
-  box.style.display = "block";
+  fields.style.display = "block"; foot.style.display = "block";
   updateCheckoutTotals();
 }
 
