@@ -2,14 +2,18 @@
    PENTING: setiap kali kamu mengubah index.html / file situs,
    naikkan nomor versi di bawah (mis. v1 -> v2) supaya pelanggan
    mendapat versi terbaru, bukan versi lama yang ter-cache. */
-const CACHE_VERSION = 'cakmoer-v17';
+const CACHE_VERSION = 'cakmoer-v18';
 const SHELL = [
   './',
   './index.html',
+  './admin.html',
   './manifest.webmanifest',
+  './admin.webmanifest',
   './icon-192.png',
   './icon-512.png',
-  './apple-touch-icon.png'
+  './apple-touch-icon.png',
+  './admin-icon-192.png',
+  './admin-icon-512.png'
 ];
 
 // Pasang: simpan kerangka situs
