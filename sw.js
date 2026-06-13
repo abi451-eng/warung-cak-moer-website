@@ -2,7 +2,7 @@
    PENTING: setiap kali kamu mengubah index.html / file situs,
    naikkan nomor versi di bawah (mis. v1 -> v2) supaya pelanggan
    mendapat versi terbaru, bukan versi lama yang ter-cache. */
-const CACHE_VERSION = 'cakmoer-v16';
+const CACHE_VERSION = 'cakmoer-v17';
 const SHELL = [
   './',
   './index.html',
@@ -39,10 +39,11 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(
       fetch(req)
         .then((res) => {
-          caches.open(CACHE_VERSION).then((c) => c.put('./index.html', res.clone()));
+          const copy = res.clone();
+          caches.open(CACHE_VERSION).then((c) => c.put(req, copy));
           return res;
         })
-        .catch(() => caches.match('./index.html'))
+        .catch(() => caches.match(req).then((r) => r || caches.match('./index.html')))
     );
     return;
   }
