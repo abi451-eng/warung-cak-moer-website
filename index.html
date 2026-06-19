@@ -260,6 +260,7 @@ footer a:hover{color:var(--gold)}
 .btn-wa:hover{filter:brightness(1.08)}
 .btn-wa:disabled{opacity:.45;cursor:not-allowed}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg.seg-3{grid-template-columns:1fr 1fr 1fr}
 .seg-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:13px 8px;border:1px solid var(--line);
   background:var(--bg);color:var(--text-soft);border-radius:var(--radius-sm);cursor:pointer;font-family:var(--sans);
   font-size:13px;font-weight:600;transition:.18s}
@@ -634,6 +635,14 @@ footer a:hover{color:var(--gold)}
         </div>
       </div>
       <div class="field" id="addrField" style="display:none"><label>Alamat pengantaran</label><textarea id="custAddr" placeholder="Alamat lengkap untuk diantar (patokan/RT-RW bila ada)"></textarea></div>
+      <div class="field">
+        <label>Metode pembayaran</label>
+        <div class="seg seg-3" id="bayarSeg">
+          <button type="button" class="seg-btn active" data-b="tunai" onclick="setBayar('tunai')">Tunai</button>
+          <button type="button" class="seg-btn" data-b="transfer" onclick="setBayar('transfer')">Transfer</button>
+          <button type="button" class="seg-btn" data-b="qris" onclick="setBayar('qris')">QRIS</button>
+        </div>
+      </div>
       <div class="field"><label>Catatan (opsional)</label><textarea id="custNote" placeholder="Contoh: nasi goreng pedas, tanpa sayur"></textarea></div>
     </div>
   </div>
@@ -971,7 +980,9 @@ function renderCart(){
    ========================================================= */
 let metode = 'ambil';
 let zona = 'dalam';
+let bayar = 'tunai';
 const ONGKIR_LUAR = 15000;
+const BAYAR_LABEL = { tunai: 'Tunai', transfer: 'Transfer', qris: 'QRIS' };
 
 function ongkirNow(){ return (metode === 'antar' && zona === 'luar') ? ONGKIR_LUAR : 0; }
 
@@ -997,6 +1008,10 @@ function setZona(z){
   zona = z;
   document.querySelectorAll('#zonaSeg .zona-opt').forEach(b => b.classList.toggle('active', b.dataset.z === z));
   updateCheckoutTotals();
+}
+function setBayar(b){
+  bayar = b;
+  document.querySelectorAll('#bayarSeg .seg-btn').forEach(x => x.classList.toggle('active', x.dataset.b === b));
 }
 
 function checkout(){
@@ -1033,7 +1048,23 @@ function checkout(){
     msg += `\n*Total: ${rupiah(total)}*`;
   }
   if(note) msg += `\n\n*Catatan:* ${note}`;
+  msg += `\n\n*Pembayaran:* ${BAYAR_LABEL[bayar] || 'Tunai'}`;
   msg += "\n\nTerima kasih 🙏";
+
+  // Catat pesanan ke dashboard admin (best-effort; tidak menghalangi WhatsApp)
+  try {
+    const order = {
+      nama, phone: telp, metode, zona: antar ? zona : '',
+      alamat: antar ? addr : '', bayar, catatan: note,
+      items: Object.entries(cart).map(([id,q])=>{ const m = MENU.find(x=>x.id==id); return { nama: m.nama, qty: q, harga: m.harga }; }),
+      subtotal: sub, ongkir, total
+    };
+    fetch('/api/orders', {
+      method: 'POST', keepalive: true,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ order })
+    }).catch(()=>{});
+  } catch(e){}
 
   const url = `https://wa.me/${CONFIG.waNumber}?text=${encodeURIComponent(msg)}`;
   window.open(url, "_blank");

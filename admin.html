@@ -409,10 +409,49 @@ body{padding-bottom:0}
 .login-card>.ti{font-size:40px;color:var(--gold)}
 .login-card h2{font-family:var(--serif);font-size:24px;font-weight:500;margin:10px 0 6px}
 .login-card p{color:var(--text-soft);font-size:14px;margin-bottom:18px}
-.adm-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
-.adm-tab{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border:1px solid var(--line);background:var(--surface);color:var(--text-soft);border-radius:var(--radius-sm);cursor:pointer;font-family:var(--sans);font-weight:600;font-size:14px;transition:.18s}
-.adm-tab i{font-size:18px}
+.adm-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:20px}
+.adm-tab{display:flex;align-items:center;justify-content:center;gap:7px;padding:12px 6px;border:1px solid var(--line);background:var(--surface);color:var(--text-soft);border-radius:var(--radius-sm);cursor:pointer;font-family:var(--sans);font-weight:600;font-size:13px;transition:.18s}
+.adm-tab i{font-size:17px}
 .adm-tab.active{border-color:var(--gold);color:var(--on-gold);background:var(--gold)}
+
+/* ===== Dashboard ===== */
+.dash-filter{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.chip{padding:8px 14px;border:1px solid var(--line);background:var(--surface);color:var(--text-soft);border-radius:999px;cursor:pointer;font-family:var(--sans);font-size:12.5px;font-weight:600;transition:.15s}
+.chip.active{border-color:var(--gold);background:var(--gold);color:var(--on-gold)}
+.dash-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.dcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px}
+.dc-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft)}
+.dc-val{font-family:var(--serif);font-size:23px;color:var(--text);margin-top:4px;line-height:1.1}
+.dc-val.gold{color:var(--gold)}
+.dc-sub{font-size:11px;color:var(--text-soft);margin-top:3px}
+.dash-panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 14px 10px;margin-bottom:18px}
+.dash-panel h5{font-family:var(--serif);font-size:14px;font-weight:500;color:var(--text);margin-bottom:12px;display:flex;justify-content:space-between;align-items:baseline}
+.dash-panel h5 span{font-family:var(--sans);font-size:11px;color:var(--text-soft)}
+.chart{display:flex;align-items:flex-end;gap:5px;height:128px;overflow-x:auto;padding-bottom:4px}
+.bar-col{flex:0 0 auto;width:24px;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.bar{width:16px;background:linear-gradient(180deg,var(--gold),#8a6f2e);border-radius:4px 4px 0 0;min-height:2px;transition:height .3s}
+.bar-col.empty .bar{background:var(--line)}
+.bar-lbl{font-size:9px;color:var(--text-soft);white-space:nowrap}
+.dash-actions{display:flex;gap:8px;margin-bottom:20px}
+.dash-actions .btn{flex:1}
+.btn.ghost{background:var(--surface);border:1px solid var(--line);color:var(--text)}
+.muted{color:var(--text-soft);font-weight:400;font-size:12px}
+.ord-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px 14px;margin-bottom:10px}
+.ord-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:7px}
+.ord-when{font-size:11.5px;color:var(--text-soft)}
+.ord-name{font-weight:700;font-size:14px;color:var(--text)}
+.ord-items{font-size:12.5px;color:var(--text-soft);margin:5px 0 8px;line-height:1.5}
+.ord-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px}
+.tagp{font-size:10.5px;padding:3px 8px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--text-soft)}
+.ord-foot{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ord-total{font-family:var(--serif);font-size:17px;color:var(--gold)}
+.ord-status{font-size:12px;font-weight:600;border:1px solid var(--line);border-radius:8px;padding:7px 9px;background:var(--bg);color:var(--text);font-family:var(--sans)}
+.st-pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
+.st-baru{background:rgba(201,162,74,.15);color:#d8b25a;border:1px solid rgba(201,162,74,.4)}
+.st-selesai{background:rgba(46,125,79,.18);color:#5cc185;border:1px solid rgba(46,125,79,.5)}
+.st-batal{background:rgba(192,57,43,.15);color:#e08b82;border:1px solid rgba(192,57,43,.45)}
+.dash-empty{text-align:center;color:var(--text-soft);padding:34px 10px;font-size:13px}
+@media(min-width:620px){ .dash-cards{grid-template-columns:repeat(4,1fr)} }
 .sec-h{font-family:var(--serif);font-size:17px;margin:8px 2px 10px}
 .save-bar{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);margin-top:16px;
   padding:14px 0;padding-bottom:calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px}
@@ -443,12 +482,43 @@ body{padding-bottom:0}
   <!-- DASHBOARD -->
   <section id="dashView" style="display:none">
     <div class="adm-tabs">
-      <button class="adm-tab active" data-tab="menu" onclick="showTab('menu')"><i class="ti ti-tools-kitchen-2"></i> Menu</button>
+      <button class="adm-tab active" data-tab="dash" onclick="showTab('dash')"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
+      <button class="adm-tab" data-tab="menu" onclick="showTab('menu')"><i class="ti ti-tools-kitchen-2"></i> Menu</button>
       <button class="adm-tab" data-tab="testi" onclick="showTab('testi')"><i class="ti ti-quote"></i> Testimoni</button>
     </div>
 
+    <!-- TAB DASHBOARD -->
+    <div id="tabDash">
+      <div class="dash-filter" id="periodFilter">
+        <button class="chip active" data-p="today" onclick="setPeriod('today')">Hari ini</button>
+        <button class="chip" data-p="month" onclick="setPeriod('month')">Bulan ini</button>
+        <button class="chip" data-p="year" onclick="setPeriod('year')">Tahun ini</button>
+        <button class="chip" data-p="all" onclick="setPeriod('all')">Semua</button>
+      </div>
+
+      <div class="dash-cards">
+        <div class="dcard"><div class="dc-label">Pesanan</div><div class="dc-val" id="dc_count">0</div><div class="dc-sub" id="dc_count_sub">&nbsp;</div></div>
+        <div class="dcard"><div class="dc-label">Pendapatan</div><div class="dc-val gold" id="dc_rev">Rp 0</div><div class="dc-sub" id="dc_rev_sub">tanpa yang dibatalkan</div></div>
+        <div class="dcard"><div class="dc-label">Rata-rata / pesanan</div><div class="dc-val" id="dc_avg">Rp 0</div><div class="dc-sub">&nbsp;</div></div>
+        <div class="dcard"><div class="dc-label">Selesai</div><div class="dc-val" id="dc_done">0</div><div class="dc-sub" id="dc_done_sub">&nbsp;</div></div>
+      </div>
+
+      <div class="dash-panel">
+        <h5 id="chartTitle">Pendapatan <span id="chartSub"></span></h5>
+        <div class="chart" id="dashChart"></div>
+      </div>
+
+      <div class="dash-actions">
+        <button class="btn btn-block" onclick="downloadCSV()"><i class="ti ti-download"></i> Unduh laporan (CSV)</button>
+        <button class="btn ghost" onclick="loadOrders(true)" title="Muat ulang" aria-label="Muat ulang"><i class="ti ti-refresh"></i></button>
+      </div>
+
+      <h4 class="sec-h">Daftar pesanan <span class="muted" id="ordCount"></span></h4>
+      <div id="ordList"><div class="dash-empty">Memuat pesanan…</div></div>
+    </div>
+
     <!-- TAB MENU -->
-    <div id="tabMenu">
+    <div id="tabMenu" style="display:none">
       <div class="adm-form">
         <h4 id="adm_form_title" style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:12px">Tambah menu</h4>
         <div class="row two">
@@ -726,14 +796,17 @@ function doLogin(){
   draft=MENU.map(x=>({...x})); tDraft=TESTI.map(x=>({...x}));
   renderAdminList(); clearForm(); renderTestiList(); clearTestiForm();
   $("#loginView").style.display="none"; $("#dashView").style.display="block"; $("#logoutBtn").style.display="grid";
+  showTab('dash');
+  loadOrders();
 }
 function logout(){
-  adminKey=null;
+  adminKey=null; ORDERS=[];
   $("#dashView").style.display="none"; $("#loginView").style.display="block"; $("#logoutBtn").style.display="none";
   $("#adm_pass").value=""; $("#login_msg").textContent="";
 }
 function showTab(t){
-  $("#tabMenu").style.display = t==='menu' ? 'block':'none';
+  $("#tabDash").style.display  = t==='dash'  ? 'block':'none';
+  $("#tabMenu").style.display  = t==='menu'  ? 'block':'none';
   $("#tabTesti").style.display = t==='testi' ? 'block':'none';
   document.querySelectorAll('.adm-tab').forEach(b=> b.classList.toggle('active', b.dataset.tab===t));
 }
@@ -858,8 +931,174 @@ async function saveTesti(){
   }catch(e){ testiMsg("Gagal menyimpan: "+e.message); }
 }
 
+/* ===== dashboard pesanan ===== */
+let ORDERS = [];
+let period = 'today';
+const TZ = 'Asia/Jayapura';
+const DAYS_ID = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const MON_ID = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const BAYAR_TXT = { tunai:'Tunai', transfer:'Transfer', qris:'QRIS' };
+
+function parts(ts){
+  const d = new Date(ts);
+  const ymd = d.toLocaleDateString('en-CA',{timeZone:TZ});
+  const [y,m,day] = ymd.split('-');
+  const time = d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',timeZone:TZ});
+  const wd = new Date(ymd+'T00:00:00').getDay();
+  return { ymd, ym:y+'-'+m, y, mIdx:parseInt(m,10)-1, day:parseInt(day,10), time, dayName:DAYS_ID[wd] };
+}
+function nowParts(){ return parts(Date.now()); }
+function maskPhone(p){
+  const s = String(p||'').replace(/[^0-9+]/g,'');
+  if(s.length<=6) return s ? s[0]+'•••' : '-';
+  return s.slice(0,4)+'••••'+s.slice(-3);
+}
+function inPeriod(o){
+  const np = nowParts(), p = parts(o.createdAt);
+  if(period==='today') return p.ymd===np.ymd;
+  if(period==='month') return p.ym===np.ym;
+  if(period==='year')  return p.y===np.y;
+  return true;
+}
+function periodLabel(){
+  const np=nowParts();
+  if(period==='today') return 'hari ini';
+  if(period==='month') return MON_ID[np.mIdx]+' '+np.y;
+  if(period==='year')  return 'tahun '+np.y;
+  return 'semua waktu';
+}
+
+async function loadOrders(refresh){
+  if(!adminKey) return;
+  if(refresh) $("#ordList").innerHTML='<div class="dash-empty">Memuat ulang…</div>';
+  try{
+    const r = await fetch('/api/orders',{headers:{'x-admin-key':adminKey},cache:'no-store'});
+    if(r.status===401){ logout(); $("#login_msg").textContent="Password salah, coba lagi."; return; }
+    if(!r.ok){ $("#ordList").innerHTML='<div class="dash-empty">Gagal memuat pesanan.</div>'; return; }
+    const j = await r.json();
+    ORDERS = Array.isArray(j.orders) ? j.orders : [];
+    renderDashboard();
+  }catch(e){ $("#ordList").innerHTML='<div class="dash-empty">Gagal memuat: '+e.message+'</div>'; }
+}
+
+function setPeriod(p){
+  period=p;
+  document.querySelectorAll('#periodFilter .chip').forEach(b=>b.classList.toggle('active', b.dataset.p===p));
+  renderDashboard();
+}
+
+function renderDashboard(){
+  const list = ORDERS.filter(inPeriod).sort((a,b)=>b.createdAt-a.createdAt);
+  const valid = list.filter(o=>o.status!=='batal');
+  const rev = valid.reduce((s,o)=>s+(o.total||0),0);
+  const done = list.filter(o=>o.status==='selesai').length;
+  $("#dc_count").textContent = list.length;
+  $("#dc_count_sub").textContent = periodLabel();
+  $("#dc_rev").textContent = rupiah(rev);
+  $("#dc_avg").textContent = rupiah(valid.length ? Math.round(rev/valid.length) : 0);
+  $("#dc_done").textContent = done;
+  $("#dc_done_sub").textContent = 'dari '+list.length+' pesanan';
+  renderChart();
+  renderOrders(list);
+}
+
+function renderChart(){
+  const np=nowParts();
+  let buckets=[], title='';
+  if(period==='year'){
+    for(let m=0;m<12;m++) buckets.push({key:np.y+'-'+String(m+1).padStart(2,'0'), lbl:MON_ID[m], val:0});
+    title='Pendapatan per bulan';
+  } else if(period==='all'){
+    const map={};
+    ORDERS.filter(o=>o.status!=='batal').forEach(o=>{ const p=parts(o.createdAt); map[p.ym]=(map[p.ym]||0)+(o.total||0); });
+    Object.keys(map).sort().forEach(k=>{ const [y,m]=k.split('-'); buckets.push({key:k,lbl:MON_ID[parseInt(m,10)-1]+' '+y.slice(2),val:map[k]}); });
+    title='Pendapatan per bulan';
+  } else {
+    const [Y,M]=np.ym.split('-'); const days=new Date(parseInt(Y,10),parseInt(M,10),0).getDate();
+    for(let d=1;d<=days;d++) buckets.push({key:np.ym+'-'+String(d).padStart(2,'0'), lbl:String(d), val:0});
+    title='Pendapatan per hari';
+  }
+  if(period!=='all'){
+    const map={};
+    ORDERS.filter(o=>o.status!=='batal').forEach(o=>{ const p=parts(o.createdAt); const key=(period==='year')?p.ym:p.ymd; map[key]=(map[key]||0)+(o.total||0); });
+    buckets.forEach(b=> b.val = map[b.key]||0);
+  }
+  $("#chartTitle").firstChild.textContent = title+' ';
+  $("#chartSub").textContent = '('+periodLabel()+')';
+  const max=Math.max(1,...buckets.map(b=>b.val));
+  $("#dashChart").innerHTML = buckets.map(b=>{
+    const h=Math.round((b.val/max)*100);
+    return `<div class="bar-col ${b.val?'':'empty'}" title="${b.lbl}: ${rupiah(b.val)}"><div class="bar" style="height:${b.val?Math.max(3,h):2}%"></div><div class="bar-lbl">${b.lbl}</div></div>`;
+  }).join('') || '<div class="dash-empty" style="padding:20px">Belum ada data.</div>';
+  const c=$("#dashChart"); if(c) c.scrollLeft = c.scrollWidth;
+}
+
+function statusPill(s){ const map={baru:'Baru',selesai:'Selesai',batal:'Batal'}; return `<span class="st-pill st-${s||'baru'}">${map[s]||'Baru'}</span>`; }
+function metodeText(o){
+  if(o.metode==='antar') return 'Diantar'+(o.zona==='luar'?' · Luar kampung':(o.zona==='dalam'?' · Dalam kampung':''));
+  return 'Ambil sendiri';
+}
+function renderOrders(list){
+  $("#ordCount").textContent = list.length ? '('+list.length+')' : '';
+  if(!list.length){ $("#ordList").innerHTML='<div class="dash-empty">Belum ada pesanan pada periode ini.</div>'; return; }
+  $("#ordList").innerHTML = list.map(o=>{
+    const p=parts(o.createdAt);
+    const items=(o.items||[]).map(it=>`${esc(it.nama)} ×${it.qty}`).join(', ');
+    return `<div class="ord-card">
+      <div class="ord-top">
+        <div><div class="ord-name">${esc(o.nama||'-')}</div><div class="ord-when">${p.dayName}, ${p.day} ${MON_ID[p.mIdx]} ${p.y} · ${p.time} · ${maskPhone(o.phone)}</div></div>
+        ${statusPill(o.status)}
+      </div>
+      <div class="ord-items">${items||'-'}</div>
+      <div class="ord-meta">
+        <span class="tagp">${metodeText(o)}</span>
+        <span class="tagp">Bayar: ${BAYAR_TXT[o.bayar]||esc(o.bayar||'-')}</span>
+        ${o.ongkir?`<span class="tagp">Ongkir ${rupiah(o.ongkir)}</span>`:''}
+        ${o.catatan?`<span class="tagp">Catatan: ${esc(o.catatan)}</span>`:''}
+      </div>
+      <div class="ord-foot">
+        <div class="ord-total">${rupiah(o.total||0)}</div>
+        <select class="ord-status" onchange="updateOrderStatus('${o.id}',this.value)">
+          <option value="baru" ${o.status==='baru'?'selected':''}>Baru</option>
+          <option value="selesai" ${o.status==='selesai'?'selected':''}>Selesai</option>
+          <option value="batal" ${o.status==='batal'?'selected':''}>Batal</option>
+        </select>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function updateOrderStatus(id,status){
+  const o=ORDERS.find(x=>x.id===id); if(o) o.status=status;
+  renderDashboard();
+  try{
+    const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':adminKey},body:JSON.stringify({action:'update',id,status})});
+    if(r.status===401){ logout(); $("#login_msg").textContent="Password salah, coba lagi."; }
+  }catch(e){}
+}
+
+function csvCell(v){ const s=String(v==null?'':v); return /[",\n;]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }
+function downloadCSV(){
+  const list = ORDERS.filter(inPeriod).sort((a,b)=>a.createdAt-b.createdAt);
+  if(!list.length){ alert('Belum ada pesanan pada periode ini untuk diunduh.'); return; }
+  const head=['Tanggal','Hari','Jam','Nama','No WA','Metode','Wilayah','Pembayaran','Pesanan','Subtotal','Ongkir','Total','Status','Catatan'];
+  const rows=list.map(o=>{
+    const p=parts(o.createdAt);
+    const items=(o.items||[]).map(it=>`${it.nama} x${it.qty}`).join(' | ');
+    const wil=o.metode==='antar'?(o.zona==='luar'?'Luar kampung':(o.zona==='dalam'?'Dalam kampung':'')):'';
+    return [p.ymd,p.dayName,p.time,o.nama,o.phone,(o.metode==='antar'?'Diantar':'Ambil sendiri'),wil,(BAYAR_TXT[o.bayar]||o.bayar||''),items,o.subtotal||0,o.ongkir||0,o.total||0,(o.status||'baru'),o.catatan||''].map(csvCell).join(';');
+  });
+  const csv='\ufeff'+head.join(';')+'\n'+rows.join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const tag = period==='all'?'semua':(period==='today'?nowParts().ymd:(period==='month'?nowParts().ym:nowParts().y));
+  a.href=url; a.download=`laporan-cak-moer-${tag}.csv`; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },100);
+}
+
 /* ===== init ===== */
-showTab('menu');
+showTab('dash');
 loadMenuData();
 loadTestiData();
 
