@@ -434,6 +434,38 @@ body{padding-bottom:0}
 .bar-lbl{font-size:9px;color:var(--text-soft);white-space:nowrap}
 .dash-actions{display:flex;gap:8px;margin-bottom:20px}
 .dash-actions .btn{flex:1}
+.dash-actions .btn.ic{flex:0 0 46px;padding-left:0;padding-right:0}
+.top-row{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--line)}
+.top-row:last-child{border-bottom:none}
+.top-rank{flex:none;width:23px;height:23px;border-radius:50%;background:var(--bg);border:1px solid var(--gold);color:var(--gold);font-family:var(--serif);font-size:12px;display:flex;align-items:center;justify-content:center}
+.top-info{flex:1;min-width:0}
+.top-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-sub{font-size:11px;color:var(--text-soft);margin-top:1px}
+.top-rev{font-family:var(--serif);font-size:13.5px;color:var(--gold);white-space:nowrap;flex:none}
+.ord-foot-actions{display:flex;gap:8px;align-items:center}
+.ord-del{flex:none;border:1px solid var(--line);background:var(--bg);color:#c0726a;border-radius:8px;padding:8px 10px;cursor:pointer;display:grid;place-items:center;font-size:15px}
+.ord-del:hover{border-color:#c0726a}
+
+/* ===== mode cetak laporan ===== */
+#printArea{display:none}
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff}
+  body>*{display:none !important}
+  #printArea{display:block !important}
+  .pr-title{font-family:'Fraunces',serif;font-size:22px;color:#13291c;margin-bottom:2px}
+  .pr-meta{font-size:11px;color:#555;margin-bottom:14px}
+  .pr-sec{font-family:'Fraunces',serif;font-size:15px;color:#13291c;margin:16px 0 7px}
+  .pr-cards{display:flex;gap:10px;margin-bottom:6px}
+  .pr-card{flex:1;border:1px solid #d9d2c2;border-radius:8px;padding:9px 11px}
+  .pr-card .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:#777}
+  .pr-card .v{font-family:'Fraunces',serif;font-size:16px;color:#1c3a26;margin-top:2px}
+  table.pr{width:100%;border-collapse:collapse;font-size:10.5px}
+  table.pr th,table.pr td{border:1px solid #ddd6c6;padding:5px 7px;text-align:left;vertical-align:top}
+  table.pr th{background:#f1ead9;color:#3c372c;font-weight:700}
+  table.pr tr{page-break-inside:avoid}
+  .pr-foot{margin-top:16px;font-size:10px;color:#888;text-align:center}
+}
 .btn.ghost{background:var(--surface);border:1px solid var(--line);color:var(--text)}
 .muted{color:var(--text-soft);font-weight:400;font-size:12px}
 .ord-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px 14px;margin-bottom:10px}
@@ -508,9 +540,15 @@ body{padding-bottom:0}
         <div class="chart" id="dashChart"></div>
       </div>
 
+      <div class="dash-panel">
+        <h5>Menu terlaris <span id="topSub"></span></h5>
+        <div id="topList"></div>
+      </div>
+
       <div class="dash-actions">
-        <button class="btn btn-block" onclick="downloadCSV()"><i class="ti ti-download"></i> Unduh laporan (CSV)</button>
-        <button class="btn ghost" onclick="loadOrders(true)" title="Muat ulang" aria-label="Muat ulang"><i class="ti ti-refresh"></i></button>
+        <button class="btn btn-block" onclick="downloadCSV()"><i class="ti ti-download"></i> Unduh CSV</button>
+        <button class="btn ghost" onclick="printReport()"><i class="ti ti-printer"></i> Cetak</button>
+        <button class="btn ghost ic" onclick="loadOrders(true)" title="Muat ulang" aria-label="Muat ulang"><i class="ti ti-refresh"></i></button>
       </div>
 
       <h4 class="sec-h">Daftar pesanan <span class="muted" id="ordCount"></span></h4>
@@ -578,6 +616,8 @@ body{padding-bottom:0}
     </div>
   </section>
 </main>
+
+<div id="printArea"></div>
 
 <script>
 const CONFIG = {
@@ -999,6 +1039,7 @@ function renderDashboard(){
   $("#dc_done").textContent = done;
   $("#dc_done_sub").textContent = 'dari '+list.length+' pesanan';
   renderChart();
+  renderTopMenu(list);
   renderOrders(list);
 }
 
@@ -1058,11 +1099,14 @@ function renderOrders(list){
       </div>
       <div class="ord-foot">
         <div class="ord-total">${rupiah(o.total||0)}</div>
-        <select class="ord-status" onchange="updateOrderStatus('${o.id}',this.value)">
-          <option value="baru" ${o.status==='baru'?'selected':''}>Baru</option>
-          <option value="selesai" ${o.status==='selesai'?'selected':''}>Selesai</option>
-          <option value="batal" ${o.status==='batal'?'selected':''}>Batal</option>
-        </select>
+        <div class="ord-foot-actions">
+          <select class="ord-status" onchange="updateOrderStatus('${o.id}',this.value)">
+            <option value="baru" ${o.status==='baru'?'selected':''}>Baru</option>
+            <option value="selesai" ${o.status==='selesai'?'selected':''}>Selesai</option>
+            <option value="batal" ${o.status==='batal'?'selected':''}>Batal</option>
+          </select>
+          <button class="ord-del" title="Hapus pesanan" aria-label="Hapus pesanan" onclick="deleteOrder('${o.id}')"><i class="ti ti-trash"></i></button>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -1075,6 +1119,75 @@ async function updateOrderStatus(id,status){
     const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':adminKey},body:JSON.stringify({action:'update',id,status})});
     if(r.status===401){ logout(); $("#login_msg").textContent="Password salah, coba lagi."; }
   }catch(e){}
+}
+
+function deleteOrder(id){
+  const o=ORDERS.find(x=>x.id===id); if(!o) return;
+  if(!confirm(`Hapus pesanan dari "${o.nama||'-'}"? Tindakan ini permanen.`)) return;
+  ORDERS = ORDERS.filter(x=>x.id!==id);
+  renderDashboard();
+  try{
+    fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':adminKey},body:JSON.stringify({action:'delete',id})})
+      .then(r=>{ if(r.status===401){ logout(); $("#login_msg").textContent="Password salah, coba lagi."; } });
+  }catch(e){}
+}
+
+/* menu terlaris (dari pesanan yang tidak dibatalkan) */
+function topMenu(list){
+  const map={};
+  list.filter(o=>o.status!=='batal').forEach(o=> (o.items||[]).forEach(it=>{
+    const k=it.nama||'-';
+    if(!map[k]) map[k]={nama:k, qty:0, rev:0};
+    map[k].qty += (it.qty||0);
+    map[k].rev += (it.qty||0)*(it.harga||0);
+  }));
+  return Object.values(map).sort((a,b)=> b.qty-a.qty || b.rev-a.rev);
+}
+function renderTopMenu(list){
+  const top=topMenu(list);
+  $("#topSub").textContent='('+periodLabel()+')';
+  if(!top.length){ $("#topList").innerHTML='<div class="dash-empty" style="padding:14px">Belum ada penjualan.</div>'; return; }
+  $("#topList").innerHTML = top.slice(0,5).map((t,i)=>`
+    <div class="top-row">
+      <div class="top-rank">${i+1}</div>
+      <div class="top-info"><div class="top-name">${esc(t.nama)}</div><div class="top-sub">${t.qty} terjual</div></div>
+      <div class="top-rev">${rupiah(t.rev)}</div>
+    </div>`).join('');
+}
+
+/* cetak laporan -> dialog cetak/PDF peramban */
+function printReport(){
+  const list = ORDERS.filter(inPeriod).sort((a,b)=>a.createdAt-b.createdAt);
+  const valid = list.filter(o=>o.status!=='batal');
+  const rev = valid.reduce((s,o)=>s+(o.total||0),0);
+  const done = list.filter(o=>o.status==='selesai').length;
+  const top = topMenu(list).slice(0,8);
+  const printed = new Date().toLocaleString('id-ID',{dateStyle:'long',timeStyle:'short',timeZone:TZ});
+
+  const topRows = top.map((t,i)=>`<tr><td>${i+1}</td><td>${esc(t.nama)}</td><td style="text-align:right">${t.qty}</td><td style="text-align:right">${rupiah(t.rev)}</td></tr>`).join('') || '<tr><td colspan="4">—</td></tr>';
+  const ordRows = list.map(o=>{
+    const p=parts(o.createdAt);
+    const items=(o.items||[]).map(it=>esc(it.nama)+' ×'+it.qty).join(', ');
+    const stat={baru:'Baru',selesai:'Selesai',batal:'Batal'}[o.status]||'Baru';
+    return `<tr><td>${p.ymd}</td><td>${p.time}</td><td>${esc(o.nama||'-')}</td><td>${o.metode==='antar'?'Antar':'Ambil'}</td><td>${BAYAR_TXT[o.bayar]||esc(o.bayar||'-')}</td><td>${items||'-'}</td><td style="text-align:right">${rupiah(o.total||0)}</td><td>${stat}</td></tr>`;
+  }).join('') || '<tr><td colspan="8">Belum ada pesanan.</td></tr>';
+
+  $("#printArea").innerHTML = `
+    <div class="pr-title">Laporan Warung Cak Moer</div>
+    <div class="pr-meta">Periode: ${periodLabel()} &nbsp;•&nbsp; Dicetak: ${printed}</div>
+    <div class="pr-cards">
+      <div class="pr-card"><div class="l">Pesanan</div><div class="v">${list.length}</div></div>
+      <div class="pr-card"><div class="l">Pendapatan</div><div class="v">${rupiah(rev)}</div></div>
+      <div class="pr-card"><div class="l">Selesai</div><div class="v">${done}</div></div>
+      <div class="pr-card"><div class="l">Rata-rata</div><div class="v">${rupiah(valid.length?Math.round(rev/valid.length):0)}</div></div>
+    </div>
+    <div class="pr-sec">Menu terlaris</div>
+    <table class="pr"><thead><tr><th>#</th><th>Menu</th><th style="text-align:right">Terjual</th><th style="text-align:right">Pendapatan</th></tr></thead><tbody>${topRows}</tbody></table>
+    <div class="pr-sec">Daftar pesanan</div>
+    <table class="pr"><thead><tr><th>Tanggal</th><th>Jam</th><th>Nama</th><th>Metode</th><th>Bayar</th><th>Pesanan</th><th style="text-align:right">Total</th><th>Status</th></tr></thead><tbody>${ordRows}</tbody></table>
+    <div class="pr-foot">Pendapatan tidak menghitung pesanan berstatus Batal · Warung Makan Cak Moer, Jl. Jambu No.73, Wonorejo Pir IV, Arso Timur</div>
+  `;
+  window.print();
 }
 
 function csvCell(v){ const s=String(v==null?'':v); return /[",\n;]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }
