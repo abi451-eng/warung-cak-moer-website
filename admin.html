@@ -414,6 +414,10 @@ body{padding-bottom:0}
 .adm-tab i{font-size:17px}
 .adm-tab.active{border-color:var(--gold);color:var(--on-gold);background:var(--gold)}
 
+.adm-group{margin-bottom:16px}
+.adm-group-h{font-family:var(--serif);font-size:15px;color:var(--gold);margin:2px 0 9px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.adm-group-h span{font-family:var(--sans);font-size:11px;color:var(--text-soft)}
+
 /* ===== Dashboard ===== */
 .dash-filter{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
 .chip{padding:8px 14px;border:1px solid var(--line);background:var(--surface);color:var(--text-soft);border-radius:999px;cursor:pointer;font-family:var(--sans);font-size:12.5px;font-weight:600;transition:.15s}
@@ -836,7 +840,7 @@ function doLogin(){
   draft=MENU.map(x=>({...x})); tDraft=TESTI.map(x=>({...x}));
   renderAdminList(); clearForm(); renderTestiList(); clearTestiForm();
   $("#loginView").style.display="none"; $("#dashView").style.display="block"; $("#logoutBtn").style.display="grid";
-  showTab('dash');
+  showTab('menu');
   loadOrders();
 }
 function logout(){
@@ -854,19 +858,29 @@ function showTab(t){
 /* ===== kelola menu ===== */
 function adminMsg(t){ $("#adm_state").textContent = t || ""; }
 function renderAdminList(){
-  $("#admList").innerHTML = draft.map(m=>`
+  const card = (m)=>`
     <div class="adm-item">
       <div class="adm-thumb">${m.img ? `<img src="${imgSrc(m)}" alt="" onerror="imgFallback(this,${m.id})">` : svgFor(m)}</div>
       <div class="adm-info">
         <h4>${esc(m.nama)}${m.soldOut ? ' · <span style="color:#c0392b">Habis</span>' : ''}</h4>
-        <div class="p">${rupiah(m.harga)} · ${m.cat === 'makanan' ? 'Makanan' : 'Minuman'}</div>
+        <div class="p">${rupiah(m.harga)}</div>
       </div>
       <div class="adm-actions">
         <button class="mini ${m.soldOut ? '' : 'on'}" title="${m.soldOut ? 'Tandai tersedia' : 'Tandai habis'}" onclick="toggleSold(${m.id})"><i class="ti ti-${m.soldOut ? 'eye-off' : 'check'}"></i></button>
         <button class="mini" title="Edit" onclick="editItem(${m.id})"><i class="ti ti-pencil"></i></button>
         <button class="mini danger" title="Hapus" onclick="deleteItem(${m.id})"><i class="ti ti-trash"></i></button>
       </div>
-    </div>`).join("") || '<div class="save-state">Belum ada menu.</div>';
+    </div>`;
+  const group = (label, cat)=>{
+    const items = draft.filter(m => m.cat === cat);
+    return `<div class="adm-group"><div class="adm-group-h">${label} <span>(${items.length})</span></div>`
+      + (items.length ? items.map(card).join("") : '<div class="save-state" style="padding:4px 2px">Belum ada.</div>')
+      + `</div>`;
+  };
+  let html = group('Makanan','makanan') + group('Minuman','minuman');
+  const others = draft.filter(m => m.cat !== 'makanan' && m.cat !== 'minuman');
+  if(others.length) html += `<div class="adm-group"><div class="adm-group-h">Lainnya <span>(${others.length})</span></div>${others.map(card).join("")}</div>`;
+  $("#admList").innerHTML = html;
 }
 function clearForm(){
   editingId=null; editingImg=null;
@@ -1211,7 +1225,7 @@ function downloadCSV(){
 }
 
 /* ===== init ===== */
-showTab('dash');
+showTab('menu');
 loadMenuData();
 loadTestiData();
 
