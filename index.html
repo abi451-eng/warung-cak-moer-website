@@ -259,6 +259,18 @@ footer a:hover{color:var(--gold)}
 .btn-wa{width:100%;justify-content:center;background:var(--wa);color:#fff;border-color:var(--wa)}
 .btn-wa:hover{filter:brightness(1.08)}
 .btn-wa:disabled{opacity:.45;cursor:not-allowed}
+.open-pill{display:inline-flex;align-items:center;gap:7px;margin:12px auto 0;padding:6px 14px;border-radius:999px;
+  font-size:12px;font-weight:600;font-family:var(--sans);border:1px solid var(--line);background:var(--surface);color:var(--text-soft)}
+.open-pill .dot{width:8px;height:8px;border-radius:50%;background:#4caf7d;box-shadow:0 0 0 3px rgba(76,175,125,.18)}
+.open-pill.closed .dot{background:#c0603a;box-shadow:0 0 0 3px rgba(192,96,58,.18)}
+.sesi-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid rgba(201,162,74,.45);
+  color:var(--gold);background:rgba(201,162,74,.1);margin-top:6px;font-family:var(--sans);letter-spacing:.02em}
+.card.is-off{opacity:.55}
+.card.is-off .thumb img{filter:grayscale(.65)}
+.off-badge{position:absolute;top:10px;right:10px;background:rgba(13,19,16,.9);border:1px solid rgba(201,162,74,.5);
+  color:var(--gold);font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:999px}
+.closed-note{background:rgba(192,96,58,.12);border:1px solid rgba(192,96,58,.4);color:#e6b3a0;
+  border-radius:var(--radius-sm);padding:11px 13px;font-size:12.5px;margin-bottom:12px;line-height:1.5}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .seg.seg-3{grid-template-columns:1fr 1fr 1fr}
 .seg-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:13px 8px;border:1px solid var(--line);
@@ -467,6 +479,7 @@ footer a:hover{color:var(--gold)}
 <div class="hero" id="top">
   <div class="hero-in">
     <span class="eyebrow">Est. 2015 — Arso Timur</span>
+    <div class="open-pill" id="openPill" style="display:none"></div>
     <h1>Cita rasa <em>yang dikenang</em></h1>
     <div class="rule"></div>
     <p>Masakan rumahan, disajikan dengan ketelatenan dan bahan segar pilihan sejak 2015.</p>
@@ -610,7 +623,10 @@ footer a:hover{color:var(--gold)}
     <button class="icon-btn" onclick="closeCart()" aria-label="Tutup"><i class="ti ti-x"></i></button>
   </div>
   <div class="drawer-scroll">
-    <div class="drawer-body" id="cartBody"></div>
+    <div class="drawer-body">
+      <div class="closed-note" id="closedNote" style="display:none"></div>
+      <div id="cartBody"></div>
+    </div>
     <div class="checkout-fields" id="checkoutFields" style="display:none">
       <div class="field"><label>Nama lengkap</label><input id="custName" placeholder="Nama kamu" /></div>
       <div class="field"><label>Nomor WhatsApp</label><input id="custPhone" inputmode="numeric" placeholder="08xxxxxxxxxx" /></div>
@@ -885,6 +901,71 @@ function load(){ try{ cart = JSON.parse(localStorage.getItem("cm_cart")) || {}; 
    ========================================================= */
 function updateStats(){ const e = document.getElementById('statCount'); if(e) e.textContent = MENU.length; }
 
+/* ===== jam buka & sesi menu ===== */
+let SETTINGS = { tutupSementara:false, pagi:{on:true,start:'06:00',end:'11:00'}, siang:{on:true,start:'11:00',end:'21:00'} };
+const SESI_LABEL = { pagi:'Pagi saja', siang:'Siang–malam' };
+const jam = s => { const [h,m]=String(s||'0:0').split(':').map(Number); return (h||0)*60+(m||0); };
+function nowMin(){
+  const t = new Date().toLocaleTimeString('en-GB',{hour12:false,hour:'2-digit',minute:'2-digit',timeZone:'Asia/Jayapura'});
+  return jam(t);
+}
+function inRange(now,a,b){ a=jam(a); b=jam(b); return (b<=a) ? (now>=a || now<b) : (now>=a && now<b); }
+function sesiNow(){
+  if(SETTINGS.tutupSementara) return null;
+  const n=nowMin();
+  if(SETTINGS.pagi && SETTINGS.pagi.on!==false && inRange(n,SETTINGS.pagi.start,SETTINGS.pagi.end)) return 'pagi';
+  if(SETTINGS.siang && SETTINGS.siang.on!==false && inRange(n,SETTINGS.siang.start,SETTINGS.siang.end)) return 'siang';
+  return null;
+}
+function isOpen(){ return sesiNow() !== null; }
+function itemOK(m){
+  const s = m.sesi || 'both';
+  if(s === 'both') return isOpen();
+  return sesiNow() === s;
+}
+function jamBerikut(){
+  const list=[];
+  if(SETTINGS.pagi && SETTINGS.pagi.on!==false) list.push(SETTINGS.pagi.start);
+  if(SETTINGS.siang && SETTINGS.siang.on!==false) list.push(SETTINGS.siang.start);
+  if(!list.length) return null;
+  const n=nowMin();
+  const next=list.map(jam).filter(x=>x>n).sort((a,b)=>a-b)[0];
+  const pick = (next!==undefined) ? next : Math.min(...list.map(jam));
+  return String(Math.floor(pick/60)).padStart(2,'0')+'.'+String(pick%60).padStart(2,'0');
+}
+function updateOpenUI(){
+  const pill=$("#openPill"); if(!pill) return;
+  const s=sesiNow();
+  pill.style.display='inline-flex';
+  if(s){
+    pill.className='open-pill';
+    pill.innerHTML=`<span class="dot"></span> Buka sekarang · ${s==='pagi'?'Sesi pagi':'Sesi siang–malam'}`;
+  } else {
+    const nx=jamBerikut();
+    pill.className='open-pill closed';
+    pill.innerHTML=`<span class="dot"></span> ${SETTINGS.tutupSementara?'Tutup sementara':'Sedang tutup'}${nx&&!SETTINGS.tutupSementara?` · buka pukul ${nx}`:''}`;
+  }
+  const note=$("#closedNote");
+  if(note){
+    if(s){ note.style.display='none'; }
+    else{
+      const nx=jamBerikut();
+      note.style.display='block';
+      note.innerHTML = SETTINGS.tutupSementara
+        ? 'Warung sedang <b>tutup sementara</b>. Silakan pesan lagi nanti ya 🙏'
+        : `Warung sedang tutup${nx?`, buka lagi pukul <b>${nx}</b>`:''}. Kamu tetap bisa melihat menu — pesanan bisa dikirim saat warung buka 🙏`;
+    }
+  }
+}
+async function loadSettings(){
+  try{
+    const r=await fetch('/api/settings',{cache:'no-store'}); if(!r.ok) return;
+    const j=await r.json();
+    if(j && j.settings) SETTINGS={...SETTINGS,...j.settings};
+  }catch(e){}
+  updateOpenUI(); renderMenu(); renderCart();
+}
+
 function renderMenu(){
   const grid = $("#menuGrid");
   const list = MENU.filter(m =>
@@ -895,24 +976,28 @@ function renderMenu(){
     grid.innerHTML = `<div class="empty-msg"><i class="ti ti-mood-empty" style="font-size:34px"></i><br>Menu tidak ditemukan.</div>`;
     return;
   }
-  grid.innerHTML = list.map((m,i)=>`
-    <article class="card ${m.soldOut ? 'is-sold' : ''}" style="--d:${Math.min(i,10)*0.05}s">
+  grid.innerHTML = list.map((m,i)=>{
+    const sTag = (m.sesi==='pagi'||m.sesi==='siang') ? `<div class="sesi-tag">Tersedia ${m.sesi==='pagi'?'pagi saja':'siang–malam'}</div>` : '';
+    const off = !m.soldOut && !itemOK(m);
+    return `
+    <article class="card ${m.soldOut ? 'is-sold' : ''} ${off ? 'is-off' : ''}" style="--d:${Math.min(i,10)*0.05}s">
       <div class="thumb">
         <img src="${imgSrc(m)}" alt="${m.nama}" loading="lazy" onerror="imgFallback(this, ${m.id})">
         <span class="tag-cat">${m.cat === 'makanan' ? 'Makanan' : 'Minuman'}</span>
-        ${m.soldOut ? '<span class="sold-badge">Habis</span>' : ''}
+        ${m.soldOut ? '<span class="sold-badge">Habis</span>' : (off ? '<span class="off-badge">Belum waktunya</span>' : '')}
       </div>
       <div class="card-body">
         <h3>${m.nama}</h3>
         <p class="desc">${m.desc || ''}</p>
+        ${sTag}
         <div class="price-row">
           <span class="price">${rupiah(m.harga)}</span>
-          ${m.soldOut
-            ? '<button class="add add-off" disabled aria-label="Habis"><i class="ti ti-ban"></i></button>'
+          ${(m.soldOut || off)
+            ? `<button class="add add-off" disabled aria-label="${m.soldOut?'Habis':'Belum tersedia'}"><i class="ti ti-${m.soldOut?'ban':'clock'}"></i></button>`
             : `<button class="add" onclick="addToCart(${m.id})" aria-label="Tambah ${m.nama}"><i class="ti ti-plus"></i></button>`}
         </div>
       </div>
-    </article>`).join("");
+    </article>`;}).join("");
   // animasi reveal kartu (hanya saat panel terbuka); fallback tampil bila tak didukung
   const panelOpen = $("#menuPanel") && $("#menuPanel").classList.contains('open');
   if(revObserver){
@@ -928,6 +1013,11 @@ function renderMenu(){
 function addToCart(id){
   const m = MENU.find(x=>x.id===id);
   if(!m || m.soldOut){ toast("Maaf, menu ini sedang habis"); return; }
+  if(!itemOK(m)){
+    if(!isOpen()){ const nx=jamBerikut(); toast(SETTINGS.tutupSementara ? "Warung sedang tutup sementara" : (nx?`Warung buka pukul ${nx}`:"Warung sedang tutup")); }
+    else toast(`${m.nama} hanya tersedia ${m.sesi==='pagi'?'pagi hari':'siang–malam'}`);
+    return;
+  }
   cart[id] = (cart[id]||0) + 1;
   save(); updateBadges(); renderCart();
   toast(`${m.nama} ditambahkan`);
@@ -1015,6 +1105,13 @@ function setBayar(b){
 }
 
 function checkout(){
+  if(!isOpen()){
+    const nx=jamBerikut();
+    toast(SETTINGS.tutupSementara ? "Warung sedang tutup sementara" : (nx?`Warung sedang tutup — buka pukul ${nx}`:"Warung sedang tutup"));
+    return;
+  }
+  const luar = Object.keys(cart).map(id=>MENU.find(x=>x.id==id)).filter(m=>m && !itemOK(m));
+  if(luar.length){ toast(`${luar[0].nama} tidak tersedia di sesi ini`); return; }
   const nama = $("#custName").value.trim();
   const telp = $("#custPhone").value.trim();
   const note = $("#custNote").value.trim();
@@ -1258,6 +1355,8 @@ function setupReveals(){
   setTheme(saved);
 
   load(); updateBadges(); renderMenu(); updateStats();
+  loadSettings();          // ambil jam buka & sesi dari server
+  setInterval(()=>{ updateOpenUI(); renderMenu(); }, 60000);
   loadMenu();   // ambil menu terbaru dari server (jika ada)
   renderTesti();
   setupReveals();

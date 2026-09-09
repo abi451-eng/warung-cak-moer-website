@@ -416,6 +416,13 @@ body{padding-bottom:0}
 
 .adm-group{margin-bottom:16px}
 .adm-group-h{font-family:var(--serif);font-size:15px;color:var(--gold);margin:2px 0 9px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.jam-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid var(--line)}
+.jam-row.tutup{border-bottom:none}
+.sw{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--text);cursor:pointer}
+.sw input{width:18px;height:18px;accent-color:var(--gold);cursor:pointer}
+.jam-time{display:flex;align-items:center;gap:6px;color:var(--text-soft);font-size:12px}
+.jam-time input{background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:7px 9px;font-family:var(--sans);font-size:13px}
+.sesi-tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:999px;border:1px solid rgba(201,162,74,.45);color:var(--gold);background:rgba(201,162,74,.1);margin-left:6px;vertical-align:middle}
 .adm-group-h span{font-family:var(--sans);font-size:11px;color:var(--text-soft)}
 
 /* ===== Dashboard ===== */
@@ -573,12 +580,36 @@ body{padding-bottom:0}
           </div>
           <div class="field"><label>Foto (opsional)</label><input id="a_foto" type="file" accept="image/*"></div>
         </div>
+        <div class="field"><label>Ketersediaan waktu</label>
+          <select id="a_sesi">
+            <option value="both">Pagi &amp; Siang–malam (sepanjang buka)</option>
+            <option value="pagi">Hanya pagi</option>
+            <option value="siang">Hanya siang–malam</option>
+          </select>
+        </div>
         <div class="field"><label>Deskripsi</label><textarea id="a_desc" placeholder="Deskripsi singkat, mis. porsi & rasa"></textarea></div>
         <div style="display:flex;gap:10px">
           <button class="btn btn-block" onclick="submitItem()"><i class="ti ti-check"></i> Simpan item</button>
           <button class="btn" style="border:1px solid var(--line);color:var(--text);background:var(--surface)" onclick="clearForm()">Reset</button>
         </div>
       </div>
+      <h4 class="sec-h">Jam buka warung</h4>
+      <div class="adm-form" id="jamBox">
+        <div class="jam-row">
+          <label class="sw"><input type="checkbox" id="s_pagi_on" checked onchange="jamChanged()"> <span>Sesi pagi</span></label>
+          <div class="jam-time"><input type="time" id="s_pagi_start" value="06:00" onchange="jamChanged()"> <span>–</span> <input type="time" id="s_pagi_end" value="11:00" onchange="jamChanged()"></div>
+        </div>
+        <div class="jam-row">
+          <label class="sw"><input type="checkbox" id="s_siang_on" checked onchange="jamChanged()"> <span>Sesi siang–malam</span></label>
+          <div class="jam-time"><input type="time" id="s_siang_start" value="11:00" onchange="jamChanged()"> <span>–</span> <input type="time" id="s_siang_end" value="21:00" onchange="jamChanged()"></div>
+        </div>
+        <div class="jam-row tutup">
+          <label class="sw"><input type="checkbox" id="s_tutup" onchange="jamChanged()"> <span>Tutup sementara (libur mendadak)</span></label>
+        </div>
+        <div class="save-state" id="jam_state" style="margin-bottom:8px"></div>
+        <button class="btn btn-block" onclick="saveSettings()"><i class="ti ti-clock-check"></i> Simpan jam buka</button>
+      </div>
+
       <h4 class="sec-h">Daftar menu</h4>
       <div id="admList"></div>
       <div class="save-bar">
@@ -842,6 +873,7 @@ function doLogin(){
   $("#loginView").style.display="none"; $("#dashView").style.display="block"; $("#logoutBtn").style.display="grid";
   showTab('menu');
   loadOrders();
+  loadSettings();
 }
 function logout(){
   adminKey=null; ORDERS=[];
@@ -863,7 +895,7 @@ function renderAdminList(){
       <div class="adm-thumb">${m.img ? `<img src="${imgSrc(m)}" alt="" onerror="imgFallback(this,${m.id})">` : svgFor(m)}</div>
       <div class="adm-info">
         <h4>${esc(m.nama)}${m.soldOut ? ' · <span style="color:#c0392b">Habis</span>' : ''}</h4>
-        <div class="p">${rupiah(m.harga)}</div>
+        <div class="p">${rupiah(m.harga)}${sesiTag(m.sesi)}</div>
       </div>
       <div class="adm-actions">
         <button class="mini ${m.soldOut ? '' : 'on'}" title="${m.soldOut ? 'Tandai tersedia' : 'Tandai habis'}" onclick="toggleSold(${m.id})"><i class="ti ti-${m.soldOut ? 'eye-off' : 'check'}"></i></button>
@@ -885,13 +917,13 @@ function renderAdminList(){
 function clearForm(){
   editingId=null; editingImg=null;
   $("#a_nama").value=""; $("#a_harga").value=""; $("#a_desc").value="";
-  $("#a_cat").value="makanan"; $("#a_foto").value="";
+  $("#a_cat").value="makanan"; $("#a_foto").value=""; $("#a_sesi").value="both";
   $("#adm_form_title").textContent="Tambah menu";
 }
 function editItem(id){
   const m=draft.find(x=>x.id===id); if(!m) return;
   editingId=id; editingImg=m.img||null;
-  $("#a_nama").value=m.nama; $("#a_harga").value=m.harga; $("#a_cat").value=m.cat; $("#a_desc").value=m.desc||""; $("#a_foto").value="";
+  $("#a_nama").value=m.nama; $("#a_harga").value=m.harga; $("#a_cat").value=m.cat; $("#a_desc").value=m.desc||""; $("#a_foto").value=""; $("#a_sesi").value=m.sesi||"both";
   $("#adm_form_title").textContent="Edit menu";
   window.scrollTo({top:0,behavior:'smooth'});
   const form=document.querySelector('#tabMenu .adm-form'); if(form){ form.classList.add('flash'); setTimeout(()=>form.classList.remove('flash'),1200); }
@@ -916,12 +948,13 @@ async function submitItem(){
   const nama=$("#a_nama").value.trim();
   const harga=parseInt(String($("#a_harga").value).replace(/\D/g,''),10);
   const cat=$("#a_cat").value, desc=$("#a_desc").value.trim(), file=$("#a_foto").files[0];
+  const sesi=$("#a_sesi").value;
   if(!nama){ adminMsg("Nama menu wajib diisi."); return; }
   if(!harga && harga!==0){ adminMsg("Harga tidak valid."); return; }
   let img=editingImg;
   try{ if(file){ adminMsg("Mengunggah foto…"); img=await uploadPhoto(file); } }catch(e){ adminMsg(e.message); return; }
-  if(editingId){ Object.assign(draft.find(x=>x.id===editingId), {nama,harga,cat,desc,img}); }
-  else{ const newId=(draft.reduce((mx,x)=>Math.max(mx,x.id),0)||0)+1; draft.push({id:newId,nama,harga,cat,desc,img,soldOut:false}); }
+  if(editingId){ Object.assign(draft.find(x=>x.id===editingId), {nama,harga,cat,desc,img,sesi}); }
+  else{ const newId=(draft.reduce((mx,x)=>Math.max(mx,x.id),0)||0)+1; draft.push({id:newId,nama,harga,cat,desc,img,sesi,soldOut:false}); }
   clearForm(); renderAdminList(); adminMsg("Tersimpan sementara. Klik Simpan untuk publikasikan.");
 }
 async function saveAdmin(){
@@ -983,6 +1016,44 @@ async function saveTesti(){
     if(!resp.ok){ const e=await resp.json().catch(()=>({})); testiMsg(e.error||"Gagal menyimpan."); return; }
     TESTI=tDraft.map(x=>({...x})); renderTestiList(); testiMsg("Tersimpan & dipublikasikan ✔");
   }catch(e){ testiMsg("Gagal menyimpan: "+e.message); }
+}
+
+/* ===== jam buka & sesi ===== */
+const SESI_LABEL = { pagi:'Pagi saja', siang:'Siang–malam' };
+function sesiTag(v){ return (v==='pagi'||v==='siang') ? `<span class="sesi-tag">${SESI_LABEL[v]}</span>` : ''; }
+
+let SETTINGS = { tutupSementara:false, pagi:{on:true,start:'06:00',end:'11:00'}, siang:{on:true,start:'11:00',end:'21:00'} };
+function fillJamForm(){
+  $("#s_pagi_on").checked   = SETTINGS.pagi.on !== false;
+  $("#s_pagi_start").value  = SETTINGS.pagi.start;
+  $("#s_pagi_end").value    = SETTINGS.pagi.end;
+  $("#s_siang_on").checked  = SETTINGS.siang.on !== false;
+  $("#s_siang_start").value = SETTINGS.siang.start;
+  $("#s_siang_end").value   = SETTINGS.siang.end;
+  $("#s_tutup").checked     = !!SETTINGS.tutupSementara;
+}
+function jamChanged(){ $("#jam_state").textContent = "Ada perubahan — klik Simpan jam buka."; }
+async function loadSettings(){
+  try{
+    const r=await fetch('/api/settings',{cache:'no-store'}); if(!r.ok) return;
+    const j=await r.json();
+    if(j && j.settings){ SETTINGS = { ...SETTINGS, ...j.settings }; fillJamForm(); }
+  }catch(e){}
+}
+async function saveSettings(){
+  const s={
+    tutupSementara: $("#s_tutup").checked,
+    pagi:{ on:$("#s_pagi_on").checked, start:$("#s_pagi_start").value, end:$("#s_pagi_end").value },
+    siang:{ on:$("#s_siang_on").checked, start:$("#s_siang_start").value, end:$("#s_siang_end").value }
+  };
+  $("#jam_state").textContent="Menyimpan…";
+  try{
+    const r=await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':adminKey},body:JSON.stringify({settings:s})});
+    if(r.status===401){ $("#jam_state").textContent=""; logout(); $("#login_msg").textContent="Password salah, coba lagi."; return; }
+    if(!r.ok){ const e=await r.json().catch(()=>({})); $("#jam_state").textContent=e.error||"Gagal menyimpan."; return; }
+    const j=await r.json(); if(j.settings){ SETTINGS=j.settings; fillJamForm(); }
+    $("#jam_state").textContent="Jam buka tersimpan ✔";
+  }catch(e){ $("#jam_state").textContent="Gagal menyimpan: "+e.message; }
 }
 
 /* ===== dashboard pesanan ===== */
