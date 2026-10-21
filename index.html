@@ -416,6 +416,68 @@ footer a:hover{color:#fff;text-decoration:underline}
 .rate-pick{display:flex;gap:6px}
 .rate-pick button{background:none;border:none;cursor:pointer;font-size:24px;color:rgba(26,31,28,.15);padding:0;line-height:1}
 .rate-pick button.on{color:var(--gold)}
+/* ===== POLISH: judul section dengan ornamen ===== */
+.sec-head.center{text-align:center}
+.sec-head.center .sec-tag::after{content:"";width:22px;height:1px;background:var(--gold)}
+.sec-head h2 em{font-style:italic;color:var(--green)}
+.leaf-rule{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--gold);margin-top:10px}
+.leaf-rule::before,.leaf-rule::after{content:"";width:34px;height:1px;background:var(--gold-line)}
+.leaf-rule i{font-size:15px}
+
+/* ===== POLISH: Tentang ===== */
+.about{position:relative;overflow:hidden;background:radial-gradient(60% 50% at 100% 0%,rgba(201,162,74,.12),transparent 70%),var(--bg-soft)}
+.about-sign{font-family:var(--serif);font-style:italic;font-size:20px!important;color:var(--green)!important;margin:18px 0 16px!important;display:inline-block;padding-bottom:6px;background:linear-gradient(var(--gold),var(--gold)) 0 100%/48px 1px no-repeat}
+.about-addr{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text);background:var(--surface);padding:8px 14px 8px 10px;border-radius:999px;box-shadow:var(--shadow-sm)}
+.about-addr i{color:var(--green);font-size:17px}
+.about-card{position:relative;overflow:hidden;color:#fff;padding:28px 24px;border-radius:24px;box-shadow:0 30px 60px -30px rgba(10,58,36,.6);background:radial-gradient(70% 60% at 100% 0%,rgba(201,162,74,.22),transparent 70%),linear-gradient(150deg,#125e3b,#0a3a24)}
+.about-card::before{content:"";position:absolute;right:-30px;bottom:-34px;width:170px;height:186px;background:url('logo-cm.png') center/contain no-repeat;filter:brightness(0) invert(1);opacity:.06;pointer-events:none}
+.about-stats{gap:0}
+.stat{position:relative;padding:18px 6px 18px 0;display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center}
+.stat:nth-child(odd){padding-right:14px}
+.stat:nth-child(even){padding-left:14px;border-left:1px solid rgba(255,255,255,.12)}
+.stat:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.12)}
+.stat>i{grid-row:span 2;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;border:1px solid var(--gold-line);color:var(--gold);font-size:20px}
+.stat .n{color:#fff;font-size:28px}
+.stat .l{color:rgba(255,255,255,.7);margin-top:2px;font-size:12.5px}
+@media(max-width:479px){.stat{grid-template-columns:1fr;row-gap:2px}.stat>i{grid-row:auto;margin-bottom:8px;width:38px;height:38px;font-size:18px}}
+
+/* ===== POLISH: Menu ===== */
+#menu{position:relative}
+#menu .menu-intro{margin:-8px auto 24px;text-align:center}
+.menu-cat{position:relative;overflow:hidden;border-radius:20px;padding:12px;grid-template-columns:104px minmax(0,1fr) 40px;column-gap:16px}
+.menu-cat:hover{transform:translateY(-4px);box-shadow:0 2px 4px rgba(26,31,28,.04),0 24px 40px -22px rgba(15,81,50,.45)}
+.mc-photo{width:104px;height:104px;border-radius:14px;background-color:var(--green-tint);background-position:center;background-size:cover,84px;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.menu-cat:hover .mc-photo{transform:scale(1.04)}
+.menu-cat .mc-go{width:40px;height:40px;background:var(--green);color:#fff;transition:.25s}
+.menu-cat:hover .mc-go{background:var(--gold);color:var(--on-gold);transform:translateX(3px)}
+@media(min-width:720px){
+  .menu-cat{grid-template-columns:minmax(0,1fr) 44px;grid-template-areas:"ph ph" "ic go" "nm go" "sb go";padding:12px 12px 20px;row-gap:2px}
+  .mc-photo{width:100%;height:auto;aspect-ratio:16/9;margin-bottom:14px;background-size:cover,140px}
+  .menu-cat>i,.menu-cat .mc-name,.menu-cat .mc-sub{padding-left:8px}
+  .menu-cat .mc-name{font-size:23px}
+  .menu-cat .mc-go{width:44px;height:44px;margin-right:6px}
+}
+.menu-cta{text-align:center}
+
+/* ===== POLISH: Testimoni ===== */
+.testi-sec{position:relative;overflow:hidden;background:radial-gradient(50% 60% at 0% 100%,rgba(15,81,50,.08),transparent 70%),radial-gradient(40% 50% at 100% 0%,rgba(201,162,74,.12),transparent 70%),var(--bg-soft)}
+.testi-card{position:relative;border-radius:20px;padding:26px 22px 22px;border-top:3px solid var(--gold)}
+.testi-card::before{content:"\201C";position:absolute;top:2px;right:18px;font-family:var(--serif);font-size:84px;line-height:1;color:var(--gold);opacity:.35;pointer-events:none}
+.testi-card:nth-child(3n+2){color:#fff;border-top-color:transparent;background:radial-gradient(70% 60% at 100% 0%,rgba(201,162,74,.22),transparent 70%),linear-gradient(150deg,#125e3b,#0a3a24);box-shadow:0 30px 60px -30px rgba(10,58,36,.6)}
+.testi-card:nth-child(3n+2) .testi-text,.testi-card:nth-child(3n+2) .testi-name{color:#fff}
+.testi-card:nth-child(3n+2) .testi-role{color:rgba(255,255,255,.7)}
+.testi-card:nth-child(3n+2) .testi-stars .st-off{color:rgba(255,255,255,.2)}
+.testi-card:nth-child(3n+2) .testi-ava{background:var(--gold);color:var(--on-gold)}
+.testi-card:nth-child(3n+2)::before{opacity:.6}
+@media(max-width:679px){
+  .testi-grid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:84%;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:4px 20px 18px;scroll-padding:0 20px;scrollbar-width:none}
+  .testi-grid::-webkit-scrollbar{display:none}
+  .testi-card{scroll-snap-align:start}
+  .testi-grid:has(> :only-child){grid-auto-columns:100%}
+}
+.testi-hint[hidden]{display:none}
+.testi-hint{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--text-faint);margin-top:2px}
+@media(min-width:680px){.testi-hint{display:none}.testi-sec .testi-card:nth-child(3n+2){transform:translateY(-10px)}.testi-sec .testi-card:nth-child(3n+2):not(.in){transform:translateY(8px)}}
 </style>
 
 <!-- Ikon Tabler -->
@@ -429,7 +491,7 @@ footer a:hover{color:#fff;text-decoration:underline}
   <div class="splash-name">Cak Moer</div>
   <div class="splash-rule"></div>
   <div class="splash-tag">Since 2015</div>
-  <div class="splash-ver">v1.5</div>
+  <div class="splash-ver">v1.6</div>
 </div>
 
 <!-- ====== HEADER ====== -->
@@ -508,17 +570,19 @@ footer a:hover{color:#fff;text-decoration:underline}
     <div>
       <div class="sec-head">
         <span class="sec-tag">Tentang kami</span>
-        <h2>Kehangatan masakan rumahan</h2>
+        <h2>Kehangatan <em>masakan rumahan</em></h2>
       </div>
       <p>Warung Makan Cak Moer menyajikan masakan rumahan yang lezat dan mengenyangkan. Kami ada di Jl. Jambu No.73, Wonorejo Pir IV, Arso Timur.</p>
       <p>Sejak 2015, kami selalu pakai bahan segar dan resep turun-temurun supaya rasanya konsisten dan selalu pas di lidah.</p>
+      <p class="about-sign">Hangat, mengenyangkan, bikin kangen.</p>
+      <div><span class="about-addr"><i class="ti ti-map-pin" aria-hidden="true"></i> Jl. Jambu No.73, Arso Timur</span></div>
     </div>
     <div class="about-card">
       <div class="about-stats">
-        <div class="stat"><div class="n">10+</div><div class="l">Tahun melayani</div></div>
-        <div class="stat"><div class="n" id="statCount">14</div><div class="l">Menu pilihan</div></div>
-        <div class="stat"><div class="n">100%</div><div class="l">Bahan segar</div></div>
-        <div class="stat"><div class="n">Ramah</div><div class="l">Harga bersahabat</div></div>
+        <div class="stat"><i class="ti ti-calendar-heart" aria-hidden="true"></i><div class="n">10+</div><div class="l">Tahun melayani</div></div>
+        <div class="stat"><i class="ti ti-tools-kitchen-2" aria-hidden="true"></i><div class="n" id="statCount">14</div><div class="l">Menu pilihan</div></div>
+        <div class="stat"><i class="ti ti-leaf" aria-hidden="true"></i><div class="n">100%</div><div class="l">Bahan segar</div></div>
+        <div class="stat"><i class="ti ti-heart-handshake" aria-hidden="true"></i><div class="n">Ramah</div><div class="l">Harga bersahabat</div></div>
       </div>
     </div>
   </div>
@@ -527,21 +591,22 @@ footer a:hover{color:#fff;text-decoration:underline}
 <!-- ====== MENU (sampul di halaman depan) ====== -->
 <section id="menu">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head center">
       <span class="sec-tag">Daftar menu</span>
-      <h2>Menu pilihan kami</h2>
+      <h2>Menu <em>pilihan</em> kami</h2>
+      <div class="leaf-rule" aria-hidden="true"><i class="ti ti-tools-kitchen-2"></i></div>
     </div>
     <p class="menu-intro">Aneka hidangan utama dan minuman, dimasak dari bahan segar pilihan. Pilih kategori atau lihat daftar lengkapnya.</p>
     <div class="menu-cats">
       <button class="menu-cat" onclick="openMenuPanel('makanan')">
-        <span class="mc-photo" aria-hidden="true" style="background-image:url('image/nasigoreng.jpg')"></span>
+        <span class="mc-photo" aria-hidden="true" style="background-image:url('image/nasigoreng.jpg'),url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' fill='none' stroke='%230f5132' stroke-opacity='.28' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M18 40c0-14 10-24 26-24 0 15-10 25-26 24zM18 40l16-14'/%3E%3Cpath d='M92 22c10 2 16 10 14 22-1 8-6 16-14 22 2-9 2-16-2-22-3-5-4-12 2-22z'/%3E%3Ccircle cx='38' cy='104' r='11'/%3E%3Cpath d='M38 93v22M27 104h22'/%3E%3C/svg%3E&quot;)"></span>
         <i class="ti ti-tools-kitchen-2" aria-hidden="true"></i>
         <span class="mc-name">Hidangan Utama</span>
         <span class="mc-sub">Nasi goreng, bakso, soto, lalapan, dan lainnya.</span>
         <span class="mc-go">Lihat <i class="ti ti-arrow-right" aria-hidden="true"></i></span>
       </button>
       <button class="menu-cat" onclick="openMenuPanel('minuman')">
-        <span class="mc-photo" aria-hidden="true" style="background-image:url('image/esteh.jpg')"></span>
+        <span class="mc-photo" aria-hidden="true" style="background-image:url('image/esteh.jpg'),url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' fill='none' stroke='%230f5132' stroke-opacity='.28' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M18 40c0-14 10-24 26-24 0 15-10 25-26 24zM18 40l16-14'/%3E%3Cpath d='M92 22c10 2 16 10 14 22-1 8-6 16-14 22 2-9 2-16-2-22-3-5-4-12 2-22z'/%3E%3Ccircle cx='38' cy='104' r='11'/%3E%3Cpath d='M38 93v22M27 104h22'/%3E%3C/svg%3E&quot;)"></span>
         <i class="ti ti-glass-full" aria-hidden="true"></i>
         <span class="mc-name">Minuman</span>
         <span class="mc-sub">Es teh, es jeruk, lemon tea, dan aneka segar.</span>
@@ -587,11 +652,13 @@ footer a:hover{color:#fff;text-decoration:underline}
 <!-- ====== TESTIMONI ====== -->
 <section id="testi" class="testi-sec">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head center">
       <span class="sec-tag">Testimoni</span>
-      <h2>Apa kata mereka</h2>
+      <h2>Apa kata <em>mereka</em></h2>
+      <div class="leaf-rule" aria-hidden="true"><i class="ti ti-heart"></i></div>
     </div>
     <div class="testi-grid" id="testiGrid"></div>
+    <div class="testi-hint" aria-hidden="true"><i class="ti ti-hand-finger-right"></i> Geser untuk ulasan lainnya</div>
   </div>
 </section>
 
@@ -1311,6 +1378,7 @@ function renderTesti(){
   if(!grid) return;
   if(!TESTI.length){ if(sec) sec.style.display='none'; grid.innerHTML=''; return; }
   if(sec) sec.style.display='';
+  const hint = sec && sec.querySelector('.testi-hint'); if(hint) hint.hidden = TESTI.length < 2;
   grid.innerHTML = TESTI.map((t,i)=>`
     <article class="testi-card" style="--d:${Math.min(i,8)*0.08}s">
       <div class="testi-stars">${stars(t.rating)}</div>
