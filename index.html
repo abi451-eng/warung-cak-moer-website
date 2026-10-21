@@ -491,7 +491,7 @@ footer a:hover{color:#fff;text-decoration:underline}
   <div class="splash-name">Cak Moer</div>
   <div class="splash-rule"></div>
   <div class="splash-tag">Since 2015</div>
-  <div class="splash-ver">v1.7</div>
+  <div class="splash-ver">v1.8</div>
 </div>
 
 <!-- ====== HEADER ====== -->
@@ -956,11 +956,13 @@ function svgFor(m){
   return `<svg viewBox="0 0 100 80" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${m.nama}"><rect width="100" height="80" fill="${bg}"/>${inner}</svg>`;
 }
 // Sumber gambar: kalau img berupa URL penuh (foto dari server) pakai apa adanya,
-// kalau nama file biasa -> dari folder image/. Kosong -> string kosong (akan fallback ke SVG).
+// kalau nama file biasa -> dari folder image/. Kosong -> tebak dari nama menu (gagal -> fallback ke SVG).
 function imgSrc(m){
-  if(!m.img) return '';
+  if(!m.img) return CONFIG.imgPath + imgSlug(m.nama) + '.jpg';
   return /^https?:\/\//.test(m.img) ? m.img : (CONFIG.imgPath + m.img);
 }
+// Menu tanpa foto -> coba image/<nama-tanpa-spasi>.jpg, mis. "Gado-Gado" -> gadogado.jpg
+function imgSlug(nama){ return String(nama||'').toLowerCase().replace(/[^a-z0-9]/g,''); }
 // Dipakai saat foto tidak ada / gagal dimuat -> ganti otomatis dgn ilustrasi SVG
 function imgFallback(img, id){
   const m = MENU.find(x => x.id === id) || draft.find(x => x.id === id);
