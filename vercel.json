@@ -1,9 +1,16 @@
 {
-  "rewrites": [
+  "redirects": [
     {
       "source": "/",
       "has": [{ "type": "host", "value": "admin.cakmoer.my.id" }],
-      "destination": "/admin.html"
+      "destination": "/admin.html",
+      "permanent": false
+    },
+    {
+      "source": "/index.html",
+      "has": [{ "type": "host", "value": "admin.cakmoer.my.id" }],
+      "destination": "/admin.html",
+      "permanent": false
     }
   ]
 }
