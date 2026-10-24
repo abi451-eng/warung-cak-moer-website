@@ -2,7 +2,7 @@
    PENTING: setiap kali kamu mengubah index.html / file situs,
    naikkan nomor versi di bawah (mis. v1 -> v2) supaya pelanggan
    mendapat versi terbaru, bukan versi lama yang ter-cache. */
-const CACHE_VERSION = 'cakmoer-v30';
+const CACHE_VERSION = 'cakmoer-v31';
 const SHELL = [
   './',
   './index.html',
@@ -40,6 +40,7 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return;                 // jangan ganggu POST (simpan menu / upload foto)
   const url = new URL(req.url);
   if (url.origin === location.origin && url.pathname.startsWith('/api/')) return; // data menu selalu dari jaringan
+  if (/\.(mp4|webm)$/.test(url.pathname)) return;     // video: biarkan browser (butuh Range request)
 
   // Navigasi halaman -> network-first (selalu coba versi terbaru, fallback ke cache saat offline)
   if (req.mode === 'navigate') {
