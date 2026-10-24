@@ -2,7 +2,7 @@
    PENTING: setiap kali kamu mengubah index.html / file situs,
    naikkan nomor versi di bawah (mis. v1 -> v2) supaya pelanggan
    mendapat versi terbaru, bukan versi lama yang ter-cache. */
-const CACHE_VERSION = 'cakmoer-v33';
+const CACHE_VERSION = 'cakmoer-v34';
 const SHELL = [
   './',
   './index.html',
@@ -44,14 +44,20 @@ self.addEventListener('fetch', (e) => {
 
   // Navigasi halaman -> network-first (selalu coba versi terbaru, fallback ke cache saat offline)
   if (req.mode === 'navigate') {
+    // Halaman cadangan saat offline: admin.cakmoer.my.id / admin.html -> admin, selain itu -> halaman depan
+    const isAdmin = location.hostname.startsWith('admin.') || url.pathname.startsWith('/admin');
+    const fallback = isAdmin ? './admin.html' : './index.html';
     e.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE_VERSION).then((c) => c.put(req, copy));
+          // simpan hanya halaman normal (bukan redirect / error) supaya cache tidak rusak
+          if (res.ok && res.type === 'basic' && !res.redirected) {
+            const copy = res.clone();
+            caches.open(CACHE_VERSION).then((c) => c.put(req, copy)).catch(() => {});
+          }
           return res;
         })
-        .catch(() => caches.match(req).then((r) => r || caches.match('./index.html')))
+        .catch(() => caches.match(req).then((r) => (r && !r.redirected ? r : caches.match(fallback))))
     );
     return;
   }
